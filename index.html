@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
+  <script type='text/javascript' src='//pl27022518.profitableratecpm.com/c9/4a/0b/c94a0b4ed40971010199e9dd59a95e25.js'></script>
+  <script type='text/javascript' src='//pl27022539.profitableratecpm.com/99/05/75/9905753e8d9eea31d7017cc9d3c18caa.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>স্মার্ট ভিডিও - সব সাপোর্ট</title>
-  <meta name="description" content="উন্নত ভিডিও যা সব ধরনের ভিডিও করতে পারে। CORS bypass, proxy support এবং multiple extraction methods।">
-  <meta name="keywords" content="ভিডিও, স্মার্ট প্লেয়ার, সব সাপোর্ট, proxy bypass">
+  <title>Smart Video Player - Universal Support</title>
+  <meta name="description" content="Advanced video player that supports all types of videos. CORS bypass, proxy support and multiple extraction methods.">
+  <meta name="keywords" content="video, smart player, universal support, proxy bypass, adult videos">
 
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
     body {
@@ -20,6 +26,42 @@
       min-height: 100vh;
       color: #222;
       overflow-x: hidden;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Disable right-click context menu */
+    body {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    video {
+      pointer-events: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    video::-webkit-media-controls-download-button {
+      display: none;
+    }
+
+    video::-webkit-media-controls-enclosure {
+      overflow: hidden;
+    }
+
+    video::-webkit-media-controls {
+      overflow: hidden;
     }
 
     .particles {
@@ -46,18 +88,18 @@
 
     header {
       text-align: center;
-      padding: 3rem 1rem 2rem 1rem;
+      padding: 2rem 1rem 1.5rem 1rem;
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
       border-bottom-left-radius: 2.5rem;
       border-bottom-right-radius: 2.5rem;
       box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
       animation: slideDown 1.2s ease;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
@@ -69,7 +111,7 @@
     }
 
     .subtitle {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: rgba(255,255,255,0.9);
       font-weight: 400;
       margin-top: 0.5rem;
@@ -78,6 +120,39 @@
     .highlight {
       color: #ff6b6b;
       font-weight: 600;
+    }
+
+    /* Ad Containers */
+    .ad-container {
+      text-align: center;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .ad-top {
+      max-width: 728px;
+      margin: 1rem auto;
+    }
+
+    .ad-sidebar {
+      position: fixed;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+    }
+
+    .ad-mobile {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .ad-sidebar { display: none; }
+      .ad-mobile { display: block; }
+      .ad-top { max-width: 320px; }
     }
 
     @keyframes gradientShift {
@@ -124,27 +199,64 @@
       color: rgba(255,255,255,0.9);
     }
 
-    main {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 2.5rem;
-      padding: 0 4vw 3rem 4vw;
-      justify-items: center;
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem auto;
+      flex-wrap: wrap;
     }
 
-    .card {
+    .pagination button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .pagination button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .pagination .current-page {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      font-size: 1.1rem;
+      padding: 0.8rem 2rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .video-container {
       width: 100%;
-      max-width: 450px;
+      max-width: 800px;
+      margin: 2rem auto;
       perspective: 1500px;
       transition: transform 0.3s ease;
-      cursor: pointer;
     }
 
-    .card:hover {
+    .video-container:hover {
       transform: translateY(-10px) scale(1.02);
     }
 
-    .card-inner {
+    .video-inner {
       position: relative;
       width: 100%;
       padding-top: 56.25%;
@@ -152,13 +264,14 @@
       transition: transform 1.2s cubic-bezier(0.4,0.2,0.2,1);
       border-radius: 2rem;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      cursor: pointer;
     }
 
-    .card:hover .card-inner {
+    .video-container:hover .video-inner {
       transform: rotateY(180deg);
     }
 
-    .card-face {
+    .video-face {
       position: absolute;
       top: 0;
       left: 0;
@@ -174,7 +287,7 @@
       backdrop-filter: blur(10px);
     }
 
-    .card-front {
+    .video-front {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       font-weight: 600;
@@ -197,7 +310,7 @@
       50% { transform: scale(1.1); opacity: 0.8; }
     }
 
-    .card-back {
+    .video-back {
       background: #1a1a2e;
       color: #fff;
       transform: rotateY(180deg);
@@ -211,6 +324,7 @@
       object-fit: cover;
       background: #000;
       border: none;
+      pointer-events: auto;
     }
 
     .error-card {
@@ -221,6 +335,7 @@
       border-radius: 2rem;
       font-size: 1.1rem;
       box-shadow: 0 10px 25px rgba(255,107,107,0.3);
+      margin: 1rem;
     }
 
     .success-card {
@@ -243,14 +358,6 @@
       margin: 0.5rem;
     }
 
-    .proxy-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 1.8rem;
-      background: #000;
-    }
-
     footer {
       margin: 3rem 0 2rem 0;
       text-align: center;
@@ -262,15 +369,34 @@
       border-radius: 2rem 2rem 0 0;
     }
 
+    .direct-link-ad {
+      text-align: center;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .direct-link-ad a {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .direct-link-ad a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
     @media (max-width: 768px) {
-      h1 { font-size: 2.2rem; }
-      main { 
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 0 2vw 2rem 2vw;
-      }
-      .card { max-width: 100%; }
-      header { padding: 2rem 1rem 1.5rem 1rem; }
+      h1 { font-size: 2rem; }
+      header { padding: 1.5rem 1rem 1rem 1rem; }
+      .pagination button { padding: 0.6rem 1rem; font-size: 0.9rem; }
+      .video-container { margin: 1rem auto; }
     }
   </style>
 </head>
@@ -278,31 +404,149 @@
   <div class="particles" id="particles"></div>
   
   <header>
-    <h1>🔥 স্মার্ট ভিডিও </h1>
-    <p class="subtitle">সব ধরনের ভিডিও<br>
+    <h1>🔥 Smart Video Player</h1>
+    <p class="subtitle">Universal Video Support<br>
     <span class="highlight">Proxy Support • CORS Bypass • Multiple Methods</span></p>
   </header>
 
+  <!-- Top Banner Ad -->
+  <div class="ad-container ad-top">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : 'c4810f25a920955af5c914a3779d9d61',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/c4810f25a920955af5c914a3779d9d61/invoke.js"></script>
+  </div>
+
+  <!-- Mobile Banner Ad -->
+  <div class="ad-container ad-mobile">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '36f4b2bf5008f70474c95ef23c47b4d0',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/36f4b2bf5008f70474c95ef23c47b4d0/invoke.js"></script>
+  </div>
+
+  <!-- Sidebar Ad -->
+  <div class="ad-sidebar">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '1fbbabca3c454cbef505889b7fdf86bc',
+        'format' : 'iframe',
+        'height' : 600,
+        'width' : 160,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/1fbbabca3c454cbef505889b7fdf86bc/invoke.js"></script>
+  </div>
+
   <div class="loading" id="loading">
     <div class="spinner"></div>
-    <div>শুরু হচ্ছে...</div>
-    <div class="status" id="status">স্ট্যাটাস: URL লিস্ট লোড হচ্ছে...</div>
+    <div>Loading...</div>
+    <div class="status" id="status">Status: Loading URL list...</div>
+  </div>
+
+  <!-- Native Banner Ad -->
+  <div class="ad-container">
+    <script async="async" data-cfasync="false" src="//pl27022671.profitableratecpm.com/bd33afff2b0d2055fa33924d85770ab4/invoke.js"></script>
+    <div id="container-bd33afff2b0d2055fa33924d85770ab4"></div>
   </div>
 
   <main id="videos" style="display: none;">
-    <!-- Video cards will be inserted here -->
+    <!-- Video will be inserted here -->
   </main>
 
+  <!-- Square Banner Ad -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '04d176f478f7739bcbcd4263486f4bb2',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+  </div>
+
+  <div class="pagination" id="pagination" style="display: none;">
+    <!-- Pagination controls will be inserted here -->
+  </div>
+
+  <!-- Medium Banner Ad -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '84fb95635357c8ec40e2f84914bc10a5',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+  </div>
+
+  <!-- Direct Link Ad -->
+  <div class="direct-link-ad">
+    <a href="https://www.profitableratecpm.com/xhjfmx5aty?key=52605e1088aa60e296bd2cb234e5d209" target="_blank">
+      🎬 Premium Video Collection - Click Here!
+    </a>
+  </div>
+
+  <!-- Vertical Banner Ad -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '059de56bbc7afe3d490a9d7c9c68c0f9',
+        'format' : 'iframe',
+        'height' : 300,
+        'width' : 160,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/059de56bbc7afe3d490a9d7c9c68c0f9/invoke.js"></script>
+  </div>
+
   <footer>
-    &copy; ২০২৫ স্মার্ট ভিডিও। Advanced Technology.<br>
-    <small>সব ধরনের video support • Real-time extraction</small>
+    &copy; 2025 Smart Video Player. Advanced Technology.<br>
+    <small>Universal video support • Real-time extraction</small>
   </footer>
 
   <script>
+    // Disable right-click and key combinations
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S
+      if (e.keyCode == 123 || 
+          (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) ||
+          (e.ctrlKey && e.keyCode == 85) ||
+          (e.ctrlKey && e.keyCode == 83)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // Disable text selection
+    document.onselectstart = function() { return false; };
+    document.onmousedown = function() { return false; };
+
     // Create floating particles
     function createParticles() {
       const particlesContainer = document.getElementById('particles');
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 15; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.left = Math.random() * 100 + '%';
@@ -314,11 +558,89 @@
       }
     }
 
-    let processedCount = 0;
-    let totalUrls = 0;
+    let allUrls = [];
+    let currentPage = 0;
+    const urlsPerPage = 1; // One video per page
 
     function updateStatus(message) {
       document.getElementById('status').textContent = message;
+    }
+
+    function createPagination() {
+      const paginationEl = document.getElementById('pagination');
+      const totalPages = allUrls.length;
+      
+      paginationEl.innerHTML = `
+        <button onclick="changePage(${Math.max(0, currentPage - 1)})" ${currentPage === 0 ? 'disabled' : ''}>
+          ← Previous
+        </button>
+        <button class="current-page">
+          Page ${currentPage + 1} of ${totalPages}
+        </button>
+        <button onclick="changePage(${Math.min(totalPages - 1, currentPage + 1)})" ${currentPage === totalPages - 1 ? 'disabled' : ''}>
+          Next →
+        </button>
+        <button onclick="changePage(${Math.floor(Math.random() * totalPages)})">
+          🎲 Random
+        </button>
+      `;
+      
+      paginationEl.style.display = 'flex';
+    }
+
+    function changePage(newPage) {
+      if (newPage >= 0 && newPage < allUrls.length && newPage !== currentPage) {
+        currentPage = newPage;
+        loadCurrentPageVideo();
+        createPagination();
+        
+        // Smooth scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    async function loadCurrentPageVideo() {
+      const videosEl = document.getElementById('videos');
+      const loadingEl = document.getElementById('loading');
+      
+      // Show loading
+      loadingEl.style.display = 'block';
+      videosEl.style.display = 'none';
+      videosEl.innerHTML = '';
+      
+      const pageUrl = allUrls[currentPage];
+      updateStatus(`Loading video ${currentPage + 1}/${allUrls.length}: ${pageUrl.substring(0, 40)}...`);
+      
+      try {
+        await processVideoUrl(pageUrl);
+        
+        // Hide loading and show video after 1 second
+        setTimeout(() => {
+          loadingEl.style.display = 'none';
+          videosEl.style.display = 'block';
+          
+          // Add entrance animation
+          const container = videosEl.querySelector('.video-container');
+          if (container) {
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(50px)';
+            setTimeout(() => {
+              container.style.transition = 'all 0.6s ease';
+              container.style.opacity = '1';
+              container.style.transform = 'translateY(0)';
+            }, 100);
+          }
+        }, 1000);
+        
+      } catch (err) {
+        console.warn('Failed to process URL:', pageUrl, err.message);
+        addErrorCard(`❌ Failed to load: ${err.message}`);
+        
+        setTimeout(() => {
+          loadingEl.style.display = 'none';
+          videosEl.style.display = 'block';
+        }, 1000);
+      }
     }
 
     // Advanced video extraction with multiple methods
@@ -327,69 +649,29 @@
       
       const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
       const loadingEl = document.getElementById('loading');
-      const videosEl = document.getElementById('videos');
       
       try {
-        updateStatus('URL লিস্ট ডাউনলোড হচ্ছে...');
+        updateStatus('Downloading URL list...');
         const res = await fetch(rawListURL);
-        if (!res.ok) throw new Error('ভিডিও লিস্ট লোড করা যায়নি');
+        if (!res.ok) throw new Error('Failed to load video list');
         
         const text = await res.text();
-        const urls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
+        allUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
         
-        if (urls.length === 0) {
-          throw new Error('কোন ভ্যালিড URL পাওয়া যায়নি');
+        if (allUrls.length === 0) {
+          throw new Error('No valid URLs found');
         }
 
-        totalUrls = urls.length;
-        updateStatus(`${totalUrls}টি Video পাওয়া গেছে, প্রসেসিং শুরু...`);
-
-        for (let i = 0; i < urls.length; i++) {
-          const pageUrl = urls[i].trim();
-          updateStatus(`প্রসেসিং (${i+1}/${totalUrls}): ${pageUrl.substring(0, 50)}...`);
-          
-          try {
-            await processVideoUrl(pageUrl);
-            processedCount++;
-          } catch (err) {
-            console.warn('URL প্রসেস করা যায়নি:', pageUrl, err.message);
-            addWarningCard(`❌ ${pageUrl.split('/')[2]} - ${err.message}`);
-          }
-          
-          // Small delay to prevent rate limiting
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-
-        if (processedCount === 0 && videosEl.children.length === 0) {
-          throw new Error('কোন ভিডিও/content পাওয়া যায়নি');
-        }
-
-        updateStatus(`সম্পন্ন! ${processedCount}টি সফল, ${totalUrls - processedCount}টি ব্যর্থ`);
+        updateStatus(`Found ${allUrls.length} videos. Loading first video...`);
+        
+        // Load first video
+        await loadCurrentPageVideo();
+        createPagination();
 
       } catch (err) {
         loadingEl.innerHTML = `<div class="error-card">⚠️ ${err.message}</div>`;
         return;
       }
-
-      // Show videos and hide loading after 2 seconds
-      setTimeout(() => {
-        loadingEl.style.display = 'none';
-        videosEl.style.display = 'grid';
-        
-        // Add entrance animation
-        const cards = document.querySelectorAll('.card');
-        cards.forEach((card, index) => {
-          setTimeout(() => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(50px)';
-            card.style.transition = 'all 0.6s ease';
-            setTimeout(() => {
-              card.style.opacity = '1';
-              card.style.transform = 'translateY(0)';
-            }, 100);
-          }, index * 150);
-        });
-      }, 2000);
     })();
 
     async function processVideoUrl(pageUrl) {
@@ -404,7 +686,7 @@
 
       for (const proxy of proxyServices) {
         try {
-          updateStatus(`load করা হচ্ছে...`);
+          updateStatus(`Loading via ${proxy.name}...`);
           const response = await fetch(proxy.url);
           
           if (!response.ok) continue;
@@ -420,7 +702,7 @@
           const videoUrl = extractVideoFromHtml(html, pageUrl);
           
           if (videoUrl) {
-            addVideoCard(pageUrl, videoUrl, 'direct', `✅ ${proxy.name} সফল`);
+            addVideoCard(pageUrl, videoUrl, 'direct', `✅ ${proxy.name} success`);
             return;
           }
         } catch (err) {
@@ -433,7 +715,7 @@
         return;
       }
 
-      // Method 3: Try iframe embedding with different approaches
+      // Method 3: Try iframe embedding
       await tryAdvancedEmbedding(pageUrl);
     }
 
@@ -448,7 +730,7 @@
         /<meta[^>]+property=["']og:video["'][^>]+content=["']([^"'>]+)["']/gi,
         /<meta[^>]+name=["']twitter:player["'][^>]+content=["']([^"'>]+)["']/gi,
         
-        // JavaScript variables (common patterns)
+        // JavaScript variables
         /(?:videoUrl|video_url|mediaUrl|streamUrl|src)\s*[=:]\s*["']([^"'>]+\.(?:mp4|webm|ogg|m3u8)[^"'>]*)["']/gi,
         /"(?:mp4|webm|ogg)":\s*"([^"]+)"/gi,
         
@@ -464,13 +746,11 @@
         while ((match = regex.exec(html)) !== null) {
           let videoUrl = match[1] || match[0];
           
-          // Skip unwanted URLs
           if (videoUrl.includes('thumbnail') || videoUrl.includes('preview') || 
               videoUrl.includes('poster') || videoUrl.includes('logo')) {
             continue;
           }
           
-          // Convert relative to absolute URL
           if (videoUrl && !videoUrl.startsWith('http')) {
             try {
               videoUrl = new URL(videoUrl, baseUrl).href;
@@ -522,26 +802,7 @@
     }
 
     async function tryAdvancedEmbedding(pageUrl) {
-      const domain = new URL(pageUrl).hostname;
-      
-      // Try different iframe approaches
-      const embedMethods = [
-        {
-          name: 'Direct Embed',
-          html: `<iframe src="${pageUrl}" frameborder="0" allowfullscreen 
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                        referrerpolicy="no-referrer"></iframe>`
-        },
-        {
-          name: 'Proxy Embed',
-          html: `<iframe src="https://proxy.cors.sh/${pageUrl}" frameborder="0" allowfullscreen 
-                        sandbox="allow-scripts allow-same-origin allow-forms"
-                        referrerpolicy="no-referrer"></iframe>`
-        }
-      ];
-      
-      // Try first method
-      addVideoCard(pageUrl, pageUrl, 'iframe-direct', `⚠️ Direct Embed চেষ্টা`);
+      addVideoCard(pageUrl, pageUrl, 'iframe-direct', `⚠️ Direct Embed Attempt`);
     }
 
     function extractYouTubeId(url) {
@@ -552,15 +813,16 @@
 
     function addVideoCard(pageUrl, videoUrl, type, status) {
       const container = document.getElementById('videos');
-      const card = document.createElement('div');
-      card.className = 'card';
+      const videoContainer = document.createElement('div');
+      videoContainer.className = 'video-container';
       
       let backContent = '';
       const domain = new URL(pageUrl).hostname;
       
       if (type === 'direct') {
         backContent = `
-          <video src="${videoUrl}" controls preload="metadata" crossorigin="anonymous">
+          <video controls preload="metadata" crossorigin="anonymous" controlsList="nodownload">
+            <source src="${videoUrl}" type="video/mp4">
             Your browser does not support the video tag.
           </video>`;
       } else if (type === 'embed') {
@@ -573,49 +835,42 @@
                   style="background: #000;"></iframe>`;
       }
 
-      card.innerHTML = `
-        <div class="card-inner">
-          <div class="card-face card-front">
+      videoContainer.innerHTML = `
+        <div class="video-inner">
+          <div class="video-face video-front">
             <span class="video-icon">🎥</span>
-            <span>Play</span>
+            <span>Click to Play</span>
             <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">${status || ''}</div>
+            <div style="font-size: 0.7rem; margin-top: 0.5rem; opacity: 0.6;">${domain}</div>
           </div>
-          <div class="card-face card-back">
+          <div class="video-face video-back">
             ${backContent}
           </div>
         </div>
       `;
       
-      container.appendChild(card);
+      container.appendChild(videoContainer);
 
-      // Add error handling
-      const video = card.querySelector('video');
+      // Add error handling for videos
+      const video = videoContainer.querySelector('video');
       if (video) {
         video.addEventListener('error', () => {
           console.warn('Video failed to load:', videoUrl);
-          card.querySelector('.card-back').innerHTML = `
-            <div class="error-card">❌ ভিডিও লোড করা যায়নি<br></div>`;
-        });
-        
-        video.addEventListener('loadstart', () => {
-          addSuccessCard(`ভিডিও লোড হচ্ছে`);
+          videoContainer.querySelector('.video-back').innerHTML = `
+            <div class="error-card">❌ Video failed to load</div>`;
         });
       }
     }
 
-    function addSuccessCard(message) {
+    function addErrorCard(message) {
       const container = document.getElementById('videos');
       const card = document.createElement('div');
-      card.innerHTML = `<div class="success-card">${message}</div>`;
-      container.appendChild(card);
-    }
-
-    function addWarningCard(message) {
-      const container = document.getElementById('videos');
-      const card = document.createElement('div');
-      card.innerHTML = `<div class="warning-card">${message}</div>`;
+      card.innerHTML = `<div class="error-card">${message}</div>`;
       container.appendChild(card);
     }
   </script>
+
+  <!-- Social Bar Ad - Before closing body tag -->
+  <script type='text/javascript' src='//pl27022518.profitableratecpm.com/c9/4a/0b/c94a0b4ed40971010199e9dd59a95e25.js'></script>
 </body>
 </html>
