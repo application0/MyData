@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>স্মার্ট ভিডিও - সব সাপোর্ট</title>
+  <meta name="description" content="উন্নত ভিডিও যা সব ধরনের ভিডিও করতে পারে। CORS bypass, proxy support এবং multiple extraction methods।">
+  <meta name="keywords" content="ভিডিও, স্মার্ট প্লেয়ার, সব সাপোর্ট, proxy bypass">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #222;
+      overflow-x: hidden;
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem 1rem;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border-bottom-left-radius: 2.5rem;
+      border-bottom-right-radius: 2.5rem;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      animation: slideDown 1.2s ease;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease infinite;
+      margin-bottom: 0.8rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+      margin-top: 0.5rem;
+    }
+
+    .highlight {
+      color: #ff6b6b;
+      font-weight: 600;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 4px solid #ff6b6b;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .status {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1rem 2rem;
+      margin: 1rem auto;
+      max-width: 500px;
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 2.5rem;
+      padding: 0 4vw 3rem 4vw;
+      justify-items: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 450px;
+      perspective: 1500px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(0.4,0.2,0.2,1);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 2rem;
+      overflow: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .video-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      animation: pulse 2s ease-in-out infinite;
+      display: block;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .card-back {
+      background: #1a1a2e;
+      color: #fff;
+      transform: rotateY(180deg);
+      padding: 0;
+    }
+
+    video, iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 1.8rem;
+      object-fit: cover;
+      background: #000;
+      border: none;
+    }
+
+    .error-card {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 2rem;
+      font-size: 1.1rem;
+      box-shadow: 0 10px 25px rgba(255,107,107,0.3);
+    }
+
+    .success-card {
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      margin: 0.5rem;
+    }
+
+    .warning-card {
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      color: #333;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      margin: 0.5rem;
+    }
+
+    .proxy-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 1.8rem;
+      background: #000;
+    }
+
+    footer {
+      margin: 3rem 0 2rem 0;
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      background: rgba(255,255,255,0.1);
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border-radius: 2rem 2rem 0 0;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      main { 
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 2vw 2rem 2vw;
+      }
+      .card { max-width: 100%; }
+      header { padding: 2rem 1rem 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <header>
+    <h1>🔥 স্মার্ট ভিডিও </h1>
+    <p class="subtitle">সব ধরনের ভিডিও<br>
+    <span class="highlight">Proxy Support • CORS Bypass • Multiple Methods</span></p>
+  </header>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div>শুরু হচ্ছে...</div>
+    <div class="status" id="status">স্ট্যাটাস: URL লিস্ট লোড হচ্ছে...</div>
+  </div>
+
+  <main id="videos" style="display: none;">
+    <!-- Video cards will be inserted here -->
+  </main>
+
+  <footer>
+    &copy; ২০২৫ স্মার্ট ভিডিও। Advanced Technology.<br>
+    <small>সব ধরনের video support • Real-time extraction</small>
+  </footer>
+
+  <script>
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    let processedCount = 0;
+    let totalUrls = 0;
+
+    function updateStatus(message) {
+      document.getElementById('status').textContent = message;
+    }
+
+    // Advanced video extraction with multiple methods
+    (async function() {
+      createParticles();
+      
+      const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
+      const loadingEl = document.getElementById('loading');
+      const videosEl = document.getElementById('videos');
+      
+      try {
+        updateStatus('URL লিস্ট ডাউনলোড হচ্ছে...');
+        const res = await fetch(rawListURL);
+        if (!res.ok) throw new Error('ভিডিও লিস্ট লোড করা যায়নি');
+        
+        const text = await res.text();
+        const urls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
+        
+        if (urls.length === 0) {
+          throw new Error('কোন ভ্যালিড URL পাওয়া যায়নি');
+        }
+
+        totalUrls = urls.length;
+        updateStatus(`${totalUrls}টি Video পাওয়া গেছে, প্রসেসিং শুরু...`);
+
+        for (let i = 0; i < urls.length; i++) {
+          const pageUrl = urls[i].trim();
+          updateStatus(`প্রসেসিং (${i+1}/${totalUrls}): ${pageUrl.substring(0, 50)}...`);
+          
+          try {
+            await processVideoUrl(pageUrl);
+            processedCount++;
+          } catch (err) {
+            console.warn('URL প্রসেস করা যায়নি:', pageUrl, err.message);
+            addWarningCard(`❌ ${pageUrl.split('/')[2]} - ${err.message}`);
+          }
+          
+          // Small delay to prevent rate limiting
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        if (processedCount === 0 && videosEl.children.length === 0) {
+          throw new Error('কোন ভিডিও/content পাওয়া যায়নি');
+        }
+
+        updateStatus(`সম্পন্ন! ${processedCount}টি সফল, ${totalUrls - processedCount}টি ব্যর্থ`);
+
+      } catch (err) {
+        loadingEl.innerHTML = `<div class="error-card">⚠️ ${err.message}</div>`;
+        return;
+      }
+
+      // Show videos and hide loading after 2 seconds
+      setTimeout(() => {
+        loadingEl.style.display = 'none';
+        videosEl.style.display = 'grid';
+        
+        // Add entrance animation
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'all 0.6s ease';
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            }, 100);
+          }, index * 150);
+        });
+      }, 2000);
+    })();
+
+    async function processVideoUrl(pageUrl) {
+      const domain = new URL(pageUrl).hostname;
+      
+      // Method 1: Try direct video extraction with multiple proxy services
+      const proxyServices = [
+        {name: 'AllOrigins', url: `https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`, type: 'json'},
+        {name: 'CORS Proxy', url: `https://corsproxy.io/?${encodeURIComponent(pageUrl)}`, type: 'text'},
+        {name: 'Proxy.CORS.sh', url: `https://proxy.cors.sh/${pageUrl}`, type: 'text'}
+      ];
+
+      for (const proxy of proxyServices) {
+        try {
+          updateStatus(`load করা হচ্ছে...`);
+          const response = await fetch(proxy.url);
+          
+          if (!response.ok) continue;
+          
+          let html;
+          if (proxy.type === 'json') {
+            const data = await response.json();
+            html = data.contents;
+          } else {
+            html = await response.text();
+          }
+          
+          const videoUrl = extractVideoFromHtml(html, pageUrl);
+          
+          if (videoUrl) {
+            addVideoCard(pageUrl, videoUrl, 'direct', `✅ ${proxy.name} সফল`);
+            return;
+          }
+        } catch (err) {
+          console.warn(`${proxy.name} failed:`, err);
+        }
+      }
+
+      // Method 2: Try special platform handling
+      if (await trySpecialPlatforms(pageUrl)) {
+        return;
+      }
+
+      // Method 3: Try iframe embedding with different approaches
+      await tryAdvancedEmbedding(pageUrl);
+    }
+
+    function extractVideoFromHtml(html, baseUrl) {
+      const extractors = [
+        // Direct video sources
+        /<video[^>]*src=["']([^"'>]+)["']/gi,
+        /<source[^>]*src=["']([^"'>]+)["']/gi,
+        
+        // Meta tags
+        /<meta[^>]+property=["']og:video:url["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<meta[^>]+property=["']og:video["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<meta[^>]+name=["']twitter:player["'][^>]+content=["']([^"'>]+)["']/gi,
+        
+        // JavaScript variables (common patterns)
+        /(?:videoUrl|video_url|mediaUrl|streamUrl|src)\s*[=:]\s*["']([^"'>]+\.(?:mp4|webm|ogg|m3u8)[^"'>]*)["']/gi,
+        /"(?:mp4|webm|ogg)":\s*"([^"]+)"/gi,
+        
+        // Direct media file links
+        /https?:\/\/[^\s"'<>()]+\.(?:mp4|webm|ogg|m3u8)(?:\?[^\s"'<>()]*)?/gi,
+        
+        // Streaming URLs
+        /https?:\/\/[^\s"'<>()]*(?:stream|video|media)[^\s"'<>()]*\.(?:mp4|webm|m3u8)/gi
+      ];
+
+      for (const regex of extractors) {
+        let match;
+        while ((match = regex.exec(html)) !== null) {
+          let videoUrl = match[1] || match[0];
+          
+          // Skip unwanted URLs
+          if (videoUrl.includes('thumbnail') || videoUrl.includes('preview') || 
+              videoUrl.includes('poster') || videoUrl.includes('logo')) {
+            continue;
+          }
+          
+          // Convert relative to absolute URL
+          if (videoUrl && !videoUrl.startsWith('http')) {
+            try {
+              videoUrl = new URL(videoUrl, baseUrl).href;
+            } catch (e) {
+              continue;
+            }
+          }
+          
+          if (videoUrl && videoUrl.startsWith('http')) {
+            return videoUrl;
+          }
+        }
+      }
+      
+      return null;
+    }
+
+    async function trySpecialPlatforms(pageUrl) {
+      const url = new URL(pageUrl);
+      
+      // YouTube
+      if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+        const videoId = extractYouTubeId(pageUrl);
+        if (videoId) {
+          addVideoCard(pageUrl, `https://www.youtube.com/embed/${videoId}`, 'embed', '✅ YouTube Embed');
+          return true;
+        }
+      }
+      
+      // Vimeo
+      if (url.hostname.includes('vimeo.com')) {
+        const videoId = pageUrl.match(/vimeo\.com\/(\d+)/);
+        if (videoId) {
+          addVideoCard(pageUrl, `https://player.vimeo.com/video/${videoId[1]}`, 'embed', '✅ Vimeo Embed');
+          return true;
+        }
+      }
+      
+      // Dailymotion
+      if (url.hostname.includes('dailymotion.com')) {
+        const videoId = pageUrl.match(/dailymotion\.com\/video\/([^?&]+)/);
+        if (videoId) {
+          addVideoCard(pageUrl, `https://www.dailymotion.com/embed/video/${videoId[1]}`, 'embed', '✅ Dailymotion Embed');
+          return true;
+        }
+      }
+      
+      return false;
+    }
+
+    async function tryAdvancedEmbedding(pageUrl) {
+      const domain = new URL(pageUrl).hostname;
+      
+      // Try different iframe approaches
+      const embedMethods = [
+        {
+          name: 'Direct Embed',
+          html: `<iframe src="${pageUrl}" frameborder="0" allowfullscreen 
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                        referrerpolicy="no-referrer"></iframe>`
+        },
+        {
+          name: 'Proxy Embed',
+          html: `<iframe src="https://proxy.cors.sh/${pageUrl}" frameborder="0" allowfullscreen 
+                        sandbox="allow-scripts allow-same-origin allow-forms"
+                        referrerpolicy="no-referrer"></iframe>`
+        }
+      ];
+      
+      // Try first method
+      addVideoCard(pageUrl, pageUrl, 'iframe-direct', `⚠️ Direct Embed চেষ্টা`);
+    }
+
+    function extractYouTubeId(url) {
+      const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    }
+
+    function addVideoCard(pageUrl, videoUrl, type, status) {
+      const container = document.getElementById('videos');
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      let backContent = '';
+      const domain = new URL(pageUrl).hostname;
+      
+      if (type === 'direct') {
+        backContent = `
+          <video src="${videoUrl}" controls preload="metadata" crossorigin="anonymous">
+            Your browser does not support the video tag.
+          </video>`;
+      } else if (type === 'embed') {
+        backContent = `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      } else if (type === 'iframe-direct') {
+        backContent = `
+          <iframe src="${pageUrl}" frameborder="0" allowfullscreen 
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  referrerpolicy="no-referrer"
+                  style="background: #000;"></iframe>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <span class="video-icon">🎥</span>
+            <span>Play</span>
+            <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">${status || ''}</div>
+          </div>
+          <div class="card-face card-back">
+            ${backContent}
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(card);
+
+      // Add error handling
+      const video = card.querySelector('video');
+      if (video) {
+        video.addEventListener('error', () => {
+          console.warn('Video failed to load:', videoUrl);
+          card.querySelector('.card-back').innerHTML = `
+            <div class="error-card">❌ ভিডিও লোড করা যায়নি<br></div>`;
+        });
+        
+        video.addEventListener('loadstart', () => {
+          addSuccessCard(`ভিডিও লোড হচ্ছে`);
+        });
+      }
+    }
+
+    function addSuccessCard(message) {
+      const container = document.getElementById('videos');
+      const card = document.createElement('div');
+      card.innerHTML = `<div class="success-card">${message}</div>`;
+      container.appendChild(card);
+    }
+
+    function addWarningCard(message) {
+      const container = document.getElementById('videos');
+      const card = document.createElement('div');
+      card.innerHTML = `<div class="warning-card">${message}</div>`;
+      container.appendChild(card);
+    }
+  </script>
+</body>
+</html>
