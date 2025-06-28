@@ -5,9 +5,9 @@
   <script type='text/javascript' src='//pl27022539.profitableratecpm.com/99/05/75/9905753e8d9eea31d7017cc9d3c18caa.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Porn Video Player Pro - Universal Video Support with Advanced Search & Caching</title>
-  <meta name="description" content="Advanced porn video player with search, thumbnails, smart caching, TikTok-style fullscreen, and universal video support. Fast loading with background preloading.">
-  <meta name="keywords" content="video player, search videos, thumbnails, smart caching, TikTok style, universal support, fast loading, porn, xxnx, xxx, xvideos">
+  <title>Smart Video Player Pro - Universal Video Support with Advanced Search & Caching</title>
+  <meta name="description" content="Advanced video player with search, thumbnails, smart caching, TikTok-style fullscreen, and universal video support. Fast loading with background preloading.">
+  <meta name="keywords" content="video player, search videos, thumbnails, smart caching, TikTok style, universal support, fast loading">
 
   <style>
     * {
@@ -104,7 +104,7 @@
       font-weight: 600;
     }
 
-    /* Enhanced Loading with Ads and Progress */
+    /* Enhanced Loading with More Ads */
     .loading-container {
       position: relative;
       text-align: center;
@@ -123,7 +123,14 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Enhanced Thumbnail Styles */
+    .loading-multiple-ads {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    /* Enhanced Full Thumbnail Styles */
     .video-thumbnail {
       position: absolute;
       top: 0;
@@ -216,13 +223,7 @@
       text-overflow: ellipsis;
     }
 
-    .video-card-domain {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.6);
-      margin-top: 0.2rem;
-    }
-
-    /* Fullscreen TikTok Style */
+    /* Enhanced TikTok-style Fullscreen */
     .fullscreen-container {
       position: fixed;
       top: 0;
@@ -233,6 +234,7 @@
       z-index: 10000;
       display: none;
       overflow: hidden;
+      touch-action: pan-y;
     }
 
     .fullscreen-video {
@@ -282,19 +284,38 @@
       writing-mode: vertical-lr;
       text-orientation: mixed;
       pointer-events: none;
+      animation: pulse 2s ease-in-out infinite;
     }
 
-    /* Fullscreen Ad Overlay */
-    .fullscreen-ad {
+    .fullscreen-progress {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Multiple Ad Containers */
+    .fullscreen-ads {
       position: absolute;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      z-index: 10002;
+    }
+
+    .fullscreen-ad {
       background: rgba(0,0,0,0.8);
       backdrop-filter: blur(10px);
       border-radius: 1rem;
       padding: 1rem;
-      z-index: 10002;
     }
 
     /* Enhanced Product Cards */
@@ -408,7 +429,7 @@
       border-color: transparent;
     }
 
-    /* Ad Containers */
+    /* Multiple Ad Containers */
     .ad-container {
       text-align: center;
       margin: 1rem auto;
@@ -435,10 +456,22 @@
       display: none;
     }
 
+    .ad-floating {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
     @media (max-width: 768px) {
       .ad-sidebar { display: none; }
       .ad-mobile { display: block; }
       .ad-top { max-width: 320px; }
+      .ad-floating { display: none; }
       h1 { font-size: 2rem; }
       header { padding: 1.5rem 1rem 1rem 1rem; }
       .video-grid { grid-template-columns: 1fr; }
@@ -680,6 +713,37 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
+
+    /* Search Enhancement */
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .search-suggestion-item {
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.2s ease;
+      color: white;
+    }
+
+    .search-suggestion-item:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .search-suggestion-item:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 <body>
@@ -690,23 +754,22 @@
     <p class="subtitle">Universal Video Support with Advanced Features<br>
     <span class="highlight">Search • Thumbnails • Smart Caching • TikTok Fullscreen</span></p>
     
-    <!-- Advanced Search Bar -->
-    <div style="margin-top: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <!-- Enhanced Search Bar -->
+    <div style="margin-top: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto; position: relative;">
       <div style="position: relative;">
-        <input type="text" id="searchInput" placeholder="🔍 Search videos by URL, domain, or keywords..." 
+        <input type="text" id="searchInput" placeholder="🔍 Search videos by title, content, or keywords..." 
                style="width: 100%; padding: 1rem 3rem 1rem 1rem; font-size: 16px; border: none; border-radius: 1rem; 
                       background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: white; 
                       border: 1px solid rgba(255,255,255,0.2);"
-               onkeyup="handleSearch(event)">
+               oninput="handleSearchInput(event)" onkeyup="handleSearchKeyup(event)" onfocus="showSearchSuggestions()">
         <button onclick="performSearch()" 
                 style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); 
                        background: linear-gradient(135deg, #ff6b6b, #ee5a24); border: none; 
                        color: white; padding: 0.7rem 1rem; border-radius: 0.7rem; cursor: pointer;">
           Search
         </button>
+        <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
       </div>
-      <div id="searchSuggestions" style="display: none; margin-top: 0.5rem; background: rgba(255,255,255,0.1); 
-                                         backdrop-filter: blur(10px); border-radius: 1rem; max-height: 200px; overflow-y: auto;"></div>
     </div>
   </header>
 
@@ -752,13 +815,27 @@
     <script type="text/javascript" src="//www.highperformanceformat.com/1fbbabca3c454cbef505889b7fdf86bc/invoke.js"></script>
   </div>
 
-  <!-- Enhanced Loading with Ads and Progress -->
+  <!-- Floating Ad -->
+  <div class="ad-floating">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '84fb95635357c8ec40e2f84914bc10a5',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 200,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+  </div>
+
+  <!-- Enhanced Loading with Multiple Ads -->
   <div class="loading-container" id="loading">
     <div class="spinner"></div>
     <div style="font-size: 1.2rem; color: rgba(255,255,255,0.8); margin: 1rem 0;">
       <span id="loadingText">Loading Video... please wait...</span>
     </div>
-    <div class="status" id="status">Status: Loading URL list...</div>
+    <div class="status" id="status">Status: Ready videos loading instantly...</div>
     
     <!-- Advanced Progress Bar -->
     <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 1rem; margin: 1rem 0; overflow: hidden;">
@@ -767,18 +844,33 @@
     </div>
     <div id="progressText" style="font-size: 0.9rem; color: rgba(255,255,255,0.7); text-align: center;">0% Complete</div>
     
-    <!-- Loading Ads -->
-    <div class="loading-ads">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : '04d176f478f7739bcbcd4263486f4bb2',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+    <!-- Multiple Loading Ads -->
+    <div class="loading-multiple-ads">
+      <div class="loading-ads">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '04d176f478f7739bcbcd4263486f4bb2',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+      </div>
+      
+      <div class="loading-ads">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '84fb95635357c8ec40e2f84914bc10a5',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+      </div>
     </div>
     
     <!-- Background Loading Status -->
@@ -790,7 +882,7 @@
     </div>
     
     <div style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 1rem;">
-      💡 Tip: Videos load faster on subsequent visits due to smart caching
+      💡 Tip: Videos load instantly with smart caching & enhanced thumbnails
     </div>
   </div>
 
@@ -804,29 +896,46 @@
     <!-- Videos will be inserted here -->
   </main>
 
-  <!-- Fullscreen TikTok-style Container -->
+  <!-- Enhanced TikTok-style Fullscreen -->
   <div class="fullscreen-container" id="fullscreenContainer">
     <div class="fullscreen-controls">
       <button class="fullscreen-btn" onclick="exitFullscreen()" title="Exit Fullscreen">✕</button>
-      <button class="fullscreen-btn" onclick="previousVideo()" title="Previous Video">↑</button>
-      <button class="fullscreen-btn" onclick="nextVideo()" title="Next Video">↓</button>
-      <button class="fullscreen-btn" onclick="randomVideo()" title="Random Video">🎲</button>
+      <button class="fullscreen-btn" onclick="previousVideoFullscreen()" title="Previous Video">↑</button>
+      <button class="fullscreen-btn" onclick="nextVideoFullscreen()" title="Next Video">↓</button>
+      <button class="fullscreen-btn" onclick="randomVideoFullscreen()" title="Random Video">🎲</button>
+      <button class="fullscreen-btn" onclick="shareVideo()" title="Share Video">📤</button>
     </div>
     <div class="swipe-indicator">Swipe ↕ for videos</div>
+    <div class="fullscreen-progress" id="fullscreenProgress">Video 1 of 100</div>
     <div id="fullscreenContent"></div>
     
-    <!-- Fullscreen Ad -->
-    <div class="fullscreen-ad">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : '84fb95635357c8ec40e2f84914bc10a5',
-          'format' : 'iframe',
-          'height' : 60,
-          'width' : 320,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+    <!-- Multiple Fullscreen Ads -->
+    <div class="fullscreen-ads">
+      <div class="fullscreen-ad">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '84fb95635357c8ec40e2f84914bc10a5',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 250,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+      </div>
+      
+      <div class="fullscreen-ad">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '04d176f478f7739bcbcd4263486f4bb2',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 250,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+      </div>
     </div>
   </div>
 
@@ -834,7 +943,7 @@
     <!-- Pagination controls will be inserted here -->
   </div>
 
-  <!-- Square Banner Ad -->
+  <!-- Additional Ad Sections -->
   <div class="ad-container">
     <script type="text/javascript">
       atOptions = {
@@ -846,6 +955,19 @@
       };
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+  </div>
+
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '059de56bbc7afe3d490a9d7c9c68c0f9',
+        'format' : 'iframe',
+        'height' : 300,
+        'width' : 250,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/059de56bbc7afe3d490a9d7c9c68c0f9/invoke.js"></script>
   </div>
 
   <!-- Enhanced Products Section -->
@@ -871,6 +993,20 @@
     </div>
   </section>
 
+  <!-- More Ad Sections -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : 'c4810f25a920955af5c914a3779d9d61',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/c4810f25a920955af5c914a3779d9d61/invoke.js"></script>
+  </div>
+
   <!-- Direct Link Ad -->
   <div class="direct-link-ad">
     <a href="https://www.profitableratecpm.com/xhjfmx5aty?key=52605e1088aa60e296bd2cb234e5d209" target="_blank">
@@ -878,18 +1014,18 @@
     </a>
   </div>
 
-  <!-- Vertical Banner Ad -->
+  <!-- Final Banner Ad -->
   <div class="ad-container">
     <script type="text/javascript">
       atOptions = {
-        'key' : '059de56bbc7afe3d490a9d7c9c68c0f9',
+        'key' : '36f4b2bf5008f70474c95ef23c47b4d0',
         'format' : 'iframe',
-        'height' : 300,
-        'width' : 160,
+        'height' : 50,
+        'width' : 320,
         'params' : {}
       };
     </script>
-    <script type="text/javascript" src="//www.highperformateformat.com/059de56bbc7afe3d490a9d7c9c68c0f9/invoke.js"></script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/36f4b2bf5008f70474c95ef23c47b4d0/invoke.js"></script>
   </div>
 
   <footer>
@@ -898,14 +1034,14 @@
   </footer>
 
   <script>
-    // Enhanced global variables with advanced caching
+    // Enhanced global variables with ready URLs for instant loading
     let allUrls = [];
     let filteredUrls = [];
     let currentPage = 0;
-    let videosPerPage = 1; // Dynamic: 1 for first page, 5-7 for others
-    let videoCache = new Map(); // Cache for processed videos
-    let thumbnailCache = new Map(); // Cache for thumbnails
-    let metadataCache = new Map(); // Cache for video metadata
+    let videosPerPage = 1;
+    let videoCache = new Map();
+    let thumbnailCache = new Map();
+    let metadataCache = new Map();
     let isLoading = false;
     let isBackgroundLoading = false;
     let preloadedPages = new Set();
@@ -915,6 +1051,16 @@
     const productsPerPage = 6;
     let searchTerm = '';
     let backgroundLoadProgress = 0;
+    let fullscreenVideoIndex = 0;
+    let searchSuggestions = [];
+    
+    // Ready URLs for instant loading - these load immediately
+    const readyUrls = [
+      'https://www.youtube.com/watch?v=Jp-5dNdnwes',
+      'https://www.youtube.com/watch?v=dOwVo1D4vi8',
+      'https://www.youtube.com/watch?v=Z_NxgrFSqg8',
+      'https://www.youtube.com/watch?v=aSdL9EJ8U_E'
+    ];
 
     // Disable right-click and key combinations
     document.addEventListener('contextmenu', e => e.preventDefault());
@@ -964,91 +1110,128 @@
       }
     }
 
-    // Advanced Search Functions
-    function handleSearch(event) {
-      if (event.key === 'Enter') {
-        performSearch();
+    // Enhanced Search Functions
+    function handleSearchInput(event) {
+      const query = event.target.value.toLowerCase().trim();
+      if (query.length >= 2) {
+        generateSearchSuggestions(query);
       } else {
-        debounceSearch();
+        hideSearchSuggestions();
       }
     }
 
-    let searchTimeout;
-    function debounceSearch() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        showSearchSuggestions();
-      }, 300);
+    function handleSearchKeyup(event) {
+      if (event.key === 'Enter') {
+        performSearch();
+      } else if (event.key === 'Escape') {
+        hideSearchSuggestions();
+      }
+    }
+
+    function generateSearchSuggestions(query) {
+      const urls = allUrls.length > 0 ? allUrls : readyUrls;
+      const suggestions = [];
+      
+      // Generate suggestions based on video titles and domains
+      urls.forEach(url => {
+        try {
+          const domain = new URL(url).hostname;
+          if (domain.includes(query) || url.toLowerCase().includes(query)) {
+            suggestions.push({
+              text: `Video from ${domain}`,
+              url: url,
+              type: 'video'
+            });
+          }
+        } catch (e) {}
+      });
+
+      // Add generic suggestions
+      const genericSuggestions = [
+        { text: `Search for "${query}" videos`, type: 'search' },
+        { text: `Find "${query}" content`, type: 'search' },
+        { text: `Browse ${query} videos`, type: 'search' }
+      ];
+
+      searchSuggestions = [...suggestions.slice(0, 3), ...genericSuggestions.slice(0, 2)];
+      displaySearchSuggestions();
+    }
+
+    function displaySearchSuggestions() {
+      const suggestionsEl = document.getElementById('searchSuggestions');
+      
+      if (searchSuggestions.length === 0) {
+        hideSearchSuggestions();
+        return;
+      }
+
+      suggestionsEl.innerHTML = searchSuggestions.map((suggestion, index) => `
+        <div class="search-suggestion-item" onclick="selectSearchSuggestion(${index})">
+          <div style="font-size: 0.9rem;">${suggestion.text}</div>
+          ${suggestion.url ? `<div style="font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-top: 0.2rem;">Click to play</div>` : ''}
+        </div>
+      `).join('');
+      
+      suggestionsEl.style.display = 'block';
+    }
+
+    function selectSearchSuggestion(index) {
+      const suggestion = searchSuggestions[index];
+      const searchInput = document.getElementById('searchInput');
+      
+      if (suggestion.url) {
+        // Find and play specific video
+        const urlIndex = allUrls.indexOf(suggestion.url);
+        if (urlIndex !== -1) {
+          const pageIndex = Math.floor(urlIndex / getVideosPerPage(0));
+          changePage(pageIndex);
+        }
+      } else {
+        // Perform search
+        searchInput.value = suggestion.text.replace(/Search for "|" videos|Find "|" content|Browse | videos/g, '');
+        performSearch();
+      }
+      
+      hideSearchSuggestions();
     }
 
     function showSearchSuggestions() {
       const input = document.getElementById('searchInput');
-      const suggestions = document.getElementById('searchSuggestions');
-      const query = input.value.toLowerCase().trim();
-      
-      if (query.length < 2) {
-        suggestions.style.display = 'none';
-        return;
-      }
-
-      const matches = allUrls.filter(url => 
-        url.toLowerCase().includes(query) || 
-        new URL(url).hostname.toLowerCase().includes(query)
-      ).slice(0, 5);
-
-      if (matches.length > 0) {
-        suggestions.innerHTML = matches.map(url => {
-          const domain = new URL(url).hostname;
-          return `
-            <div onclick="selectSuggestion('Video')" 
-                 style="padding: 0.7rem 1rem; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1);
-                        transition: background 0.2s ease;"
-                 onmouseover="this.style.background='rgba(255,255,255,0.1)'"
-                 onmouseout="this.style.background='transparent'">
-              <div style="font-size: 0.9rem; color: white;">touch to show</div>
-              <div style="font-size: 0.7rem; color: rgba(255,255,255,0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                Free
-              </div>
-            </div>
-          `;
-        }).join('');
-        suggestions.style.display = 'block';
-      } else {
-        suggestions.style.display = 'none';
+      if (input.value.trim().length >= 2) {
+        generateSearchSuggestions(input.value.toLowerCase().trim());
       }
     }
 
-    function selectSuggestion(url) {
-      const suggestions = document.getElementById('searchSuggestions');
-      suggestions.style.display = 'none';
-      
-      const index = allUrls.indexOf(url);
-      if (index !== -1) {
-        changePage(Math.floor(index / getVideosPerPage(Math.floor(index / getVideosPerPage(0)))));
-      }
+    function hideSearchSuggestions() {
+      document.getElementById('searchSuggestions').style.display = 'none';
     }
 
     function performSearch() {
       const input = document.getElementById('searchInput');
-      const suggestions = document.getElementById('searchSuggestions');
       searchTerm = input.value.toLowerCase().trim();
       
-      suggestions.style.display = 'none';
+      hideSearchSuggestions();
       
       if (searchTerm === '') {
-        filteredUrls = [...allUrls];
+        filteredUrls = [];
       } else {
-        filteredUrls = allUrls.filter(url => 
-          url.toLowerCase().includes(searchTerm) || 
-          new URL(url).hostname.toLowerCase().includes(searchTerm)
-        );
+        const urls = allUrls.length > 0 ? allUrls : readyUrls;
+        filteredUrls = urls.filter(url => {
+          try {
+            const domain = new URL(url).hostname;
+            return domain.toLowerCase().includes(searchTerm) || 
+                   url.toLowerCase().includes(searchTerm);
+          } catch (e) {
+            return url.toLowerCase().includes(searchTerm);
+          }
+        });
       }
       
       currentPage = 0;
       loadCurrentPageVideo();
       createPagination();
       
-      if (filteredUrls.length === 0) {
+      if (filteredUrls.length === 0 && searchTerm !== '') {
         document.getElementById('videos').innerHTML = `
           <div class="error-card">
             🔍 No videos found for "${searchTerm}"<br>
@@ -1062,11 +1245,11 @@
 
     // Enhanced pagination with dynamic page sizes
     function getVideosPerPage(pageIndex) {
-      return pageIndex === 0 ? 1 : Math.floor(Math.random() * 3) + 5; // 1 for first page, 5-7 for others
+      return pageIndex === 0 ? 1 : Math.floor(Math.random() * 3) + 5;
     }
 
     function getPageBoundaries() {
-      const urls = filteredUrls.length > 0 ? filteredUrls : allUrls;
+      const urls = filteredUrls.length > 0 ? filteredUrls : (allUrls.length > 0 ? allUrls : readyUrls);
       let pages = [];
       let currentIndex = 0;
       let pageIndex = 0;
@@ -1088,7 +1271,7 @@
       const paginationEl = document.getElementById('pagination');
       const pages = getPageBoundaries();
       const totalPages = pages.length;
-      const urls = filteredUrls.length > 0 ? filteredUrls : allUrls;
+      const urls = filteredUrls.length > 0 ? filteredUrls : (allUrls.length > 0 ? allUrls : readyUrls);
       
       if (currentPage >= totalPages) currentPage = 0;
       
@@ -1121,12 +1304,10 @@
       
       paginationEl.style.display = 'flex';
       
-      // Update background status if visible
       if (isBackgroundLoading) {
         updateBackgroundStatus();
       }
       
-      // Preload adjacent pages
       preloadAdjacentPages();
     }
 
@@ -1139,14 +1320,13 @@
       createPagination();
     }
 
-    // Preload adjacent pages in background
     async function preloadAdjacentPages() {
       const pagesToPreload = [currentPage - 1, currentPage + 1, currentPage + 2];
       
       for (const page of pagesToPreload) {
         if (page >= 0 && page < getPageBoundaries().length && !preloadedPages.has(page)) {
           try {
-            setTimeout(() => preloadPage(page), 2000); // Delay to not affect current loading
+            setTimeout(() => preloadPage(page), 2000);
           } catch (err) {
             console.warn('Preload failed for page:', page);
           }
@@ -1162,13 +1342,13 @@
         const pageInfo = pages[pageIndex];
         if (!pageInfo) return;
         
-        const urls = filteredUrls.length > 0 ? filteredUrls : allUrls;
+        const urls = filteredUrls.length > 0 ? filteredUrls : (allUrls.length > 0 ? allUrls : readyUrls);
         const pageUrls = urls.slice(pageInfo.start, pageInfo.end);
         
         for (const url of pageUrls) {
           const cacheKey = `video_${url}`;
           if (!videoCache.has(cacheKey)) {
-            await processVideoUrl(url, true); // Silent preload
+            await processVideoUrl(url, true);
           }
         }
         
@@ -1183,6 +1363,7 @@
       const totalPages = getPageBoundaries().length;
       if (newPage >= 0 && newPage < totalPages && newPage !== currentPage && !isLoading) {
         currentPage = newPage;
+        fullscreenVideoIndex = newPage;
         loadCurrentPageVideo();
         createPagination();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1200,7 +1381,7 @@
       videosEl.style.display = 'none';
       videosEl.innerHTML = '';
       
-      const urls = filteredUrls.length > 0 ? filteredUrls : allUrls;
+      const urls = filteredUrls.length > 0 ? filteredUrls : (allUrls.length > 0 ? allUrls : readyUrls);
       const pages = getPageBoundaries();
       const currentPageInfo = pages[currentPage];
       
@@ -1213,15 +1394,12 @@
       const totalVideos = pageUrls.length;
       
       updateStatus(`Loading ${totalVideos} video${totalVideos !== 1 ? 's' : ''} on page ${currentPage + 1}...`);
-      updateProgress(0, 'Preparing videos...');
+      updateProgress(0, 'Processing videos...');
       
       try {
-        // Load videos for current page
         if (totalVideos === 1) {
-          // Single video layout (first page)
           await loadSingleVideo(pageUrls[0], 0);
         } else {
-          // Grid layout (subsequent pages)
           await loadVideoGrid(pageUrls);
         }
         
@@ -1229,7 +1407,6 @@
           loadingEl.style.display = 'none';
           videosEl.style.display = 'block';
           
-          // Animate video containers
           const containers = videosEl.querySelectorAll('.video-container, .video-card');
           containers.forEach((container, index) => {
             container.style.opacity = '0';
@@ -1240,7 +1417,7 @@
               container.style.transform = 'translateY(0)';
             }, 100 + index * 100);
           });
-        }, 1000);
+        }, 500);
         
       } catch (err) {
         console.warn('Failed to load page:', err.message);
@@ -1320,22 +1497,28 @@
       container.innerHTML = cachedData.html;
     }
 
-    // Enhanced video processing with thumbnail extraction and metadata
+    // Enhanced video processing with advanced thumbnail extraction
     async function processVideoUrl(pageUrl, isPreload = false, index = 0, returnData = false) {
-      const domain = new URL(pageUrl).hostname;
       const cacheKey = `video_${pageUrl}`;
       
       if (!isPreload) {
         updateStatus(`Extracting video... please wait...`);
       }
       
-      // Extract metadata first
       const metadata = await extractVideoMetadata(pageUrl);
       
+      // Try special platforms first (faster)
+      const specialPlatformData = await trySpecialPlatforms(pageUrl, isPreload, returnData);
+      if (specialPlatformData) {
+        return specialPlatformData;
+      }
+
+      // Enhanced proxy services
       const proxyServices = [
         {name: 'AllOrigins', url: `https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`, type: 'json'},
         {name: 'CORS Proxy', url: `https://corsproxy.io/?${encodeURIComponent(pageUrl)}`, type: 'text'},
-        {name: 'Proxy.CORS.sh', url: `https://proxy.cors.sh/${pageUrl}`, type: 'text'}
+        {name: 'Proxy.CORS.sh', url: `https://proxy.cors.sh/${pageUrl}`, type: 'text'},
+        {name: 'ThingProxy', url: `https://thingproxy.freeboard.io/fetch/${pageUrl}`, type: 'text'}
       ];
 
       for (const proxy of proxyServices) {
@@ -1356,7 +1539,7 @@
           }
           
           const videoUrl = extractVideoFromHtml(html, pageUrl);
-          const thumbnail = extractThumbnailFromHtml(html, pageUrl);
+          const thumbnail = await extractEnhancedThumbnail(html, pageUrl, videoUrl);
           
           if (videoUrl) {
             const videoData = {
@@ -1365,15 +1548,14 @@
               thumbnail,
               metadata,
               type: 'direct',
-              status: `✅ ${proxy.name} success`,
-              domain,
-              html: generateVideoHTML(pageUrl, videoUrl, 'direct', `✅ ${proxy.name} success`, thumbnail, metadata)
+              status: `✅ Ready to Play`,
+              html: generateVideoHTML(pageUrl, videoUrl, 'direct', `✅ Ready to Play`, thumbnail, metadata)
             };
             
             videoCache.set(cacheKey, videoData);
             
             if (!isPreload && !returnData) {
-              addVideoCard(pageUrl, videoUrl, 'direct', `✅ ${proxy.name} success`, thumbnail, metadata);
+              addVideoCard(pageUrl, videoUrl, 'direct', `✅ Ready to Play`, thumbnail, metadata);
             }
             
             return videoData;
@@ -1383,11 +1565,6 @@
         }
       }
 
-      const specialPlatformData = await trySpecialPlatforms(pageUrl, isPreload, returnData);
-      if (specialPlatformData) {
-        return specialPlatformData;
-      }
-
       if (!isPreload && !returnData) {
         return await tryAdvancedEmbedding(pageUrl);
       }
@@ -1395,7 +1572,58 @@
       return null;
     }
 
-    // Extract video metadata (title, description, etc.)
+    // Enhanced thumbnail extraction with video frame capture
+    async function extractEnhancedThumbnail(html, pageUrl, videoUrl = null) {
+      // First try standard thumbnail extraction
+      let thumbnail = extractThumbnailFromHtml(html, pageUrl);
+      
+      if (!thumbnail && videoUrl) {
+        // Try to generate thumbnail from video frames
+        try {
+          thumbnail = await generateVideoThumbnail(videoUrl);
+        } catch (err) {
+          console.warn('Video thumbnail generation failed:', err);
+        }
+      }
+      
+      // Cache the thumbnail
+      if (thumbnail) {
+        thumbnailCache.set(pageUrl, thumbnail);
+      }
+      
+      return thumbnail;
+    }
+
+    async function generateVideoThumbnail(videoUrl) {
+      return new Promise((resolve) => {
+        const video = document.createElement('video');
+        video.crossOrigin = 'anonymous';
+        video.muted = true;
+        video.currentTime = 3; // Seek to 3 seconds
+        
+        video.onloadeddata = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+            resolve(thumbnailUrl);
+          } catch (err) {
+            resolve(null);
+          }
+        };
+        
+        video.onerror = () => resolve(null);
+        video.src = videoUrl;
+        
+        // Timeout after 5 seconds
+        setTimeout(() => resolve(null), 5000);
+      });
+    }
+
     async function extractVideoMetadata(pageUrl) {
       try {
         const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`);
@@ -1409,7 +1637,7 @@
         const title = doc.querySelector('title')?.textContent || 
                      doc.querySelector('meta[property="og:title"]')?.content || 
                      doc.querySelector('meta[name="twitter:title"]')?.content || 
-                     new URL(pageUrl).hostname;
+                     'Video Content';
         
         const description = doc.querySelector('meta[property="og:description"]')?.content || 
                            doc.querySelector('meta[name="description"]')?.content || 
@@ -1417,11 +1645,10 @@
         
         return { title: title.substring(0, 100), description: description.substring(0, 200) };
       } catch (err) {
-        return { title: new URL(pageUrl).hostname, description: '' };
+        return { title: 'Video Content', description: '' };
       }
     }
 
-    // Extract thumbnail from HTML
     function extractThumbnailFromHtml(html, baseUrl) {
       const thumbnailRegexes = [
         /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"'>]+)["']/gi,
@@ -1429,7 +1656,8 @@
         /<meta[^>]+property=["']og:video:thumbnail["'][^>]+content=["']([^"'>]+)["']/gi,
         /<video[^>]+poster=["']([^"'>]+)["']/gi,
         /"thumbnail":\s*"([^"]+)"/gi,
-        /"poster":\s*"([^"]+)"/gi
+        /"poster":\s*"([^"]+)"/gi,
+        /"image":\s*"([^"]+)"/gi
       ];
 
       for (const regex of thumbnailRegexes) {
@@ -1443,6 +1671,12 @@
             } catch (e) {
               continue;
             }
+          }
+          
+          // Skip logos and watermarked images
+          if (thumbnailUrl.includes('logo') || thumbnailUrl.includes('watermark') || 
+              thumbnailUrl.includes('avatar') || thumbnailUrl.includes('icon')) {
+            continue;
           }
           
           return thumbnailUrl;
@@ -1494,28 +1728,26 @@
 
     async function trySpecialPlatforms(pageUrl, isPreload = false, returnData = false) {
       const url = new URL(pageUrl);
-      const domain = url.hostname;
       
       if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
         const videoId = extractYouTubeId(pageUrl);
         if (videoId) {
           const thumbnail = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1`;
           
           const videoData = {
             pageUrl,
             videoUrl: embedUrl,
             thumbnail,
             type: 'embed',
-            status: '✅ YouTube Embed',
-            domain,
+            status: '✅ Ready to Play',
             metadata: { title: 'YouTube Video', description: '' }
           };
           
           videoCache.set(`video_${pageUrl}`, videoData);
           
           if (!isPreload && !returnData) {
-            addVideoCard(pageUrl, embedUrl, 'embed', '✅ YouTube Embed', thumbnail);
+            addVideoCard(pageUrl, embedUrl, 'embed', '✅ Ready to Play', thumbnail);
           }
           
           return returnData ? videoData : true;
@@ -1525,22 +1757,21 @@
       if (url.hostname.includes('vimeo.com')) {
         const videoId = pageUrl.match(/vimeo\.com\/(\d+)/);
         if (videoId) {
-          const embedUrl = `https://player.vimeo.com/video/${videoId[1]}`;
+          const embedUrl = `https://player.vimeo.com/video/${videoId[1]}?autoplay=0`;
           
           const videoData = {
             pageUrl,
             videoUrl: embedUrl,
             thumbnail: null,
             type: 'embed',
-            status: '✅ Vimeo Embed',
-            domain,
+            status: '✅ Ready to Play',
             metadata: { title: 'Vimeo Video', description: '' }
           };
           
           videoCache.set(`video_${pageUrl}`, videoData);
           
           if (!isPreload && !returnData) {
-            addVideoCard(pageUrl, embedUrl, 'embed', '✅ Vimeo Embed');
+            addVideoCard(pageUrl, embedUrl, 'embed', '✅ Ready to Play');
           }
           
           return returnData ? videoData : true;
@@ -1550,22 +1781,21 @@
       if (url.hostname.includes('dailymotion.com')) {
         const videoId = pageUrl.match(/dailymotion\.com\/video\/([^?&]+)/);
         if (videoId) {
-          const embedUrl = `https://www.dailymotion.com/embed/video/${videoId[1]}`;
+          const embedUrl = `https://www.dailymotion.com/embed/video/${videoId[1]}?autoplay=0`;
           
           const videoData = {
             pageUrl,
             videoUrl: embedUrl,
             thumbnail: null,
             type: 'embed',
-            status: '✅ Dailymotion Embed',
-            domain,
+            status: '✅ Ready to Play',
             metadata: { title: 'Dailymotion Video', description: '' }
           };
           
           videoCache.set(`video_${pageUrl}`, videoData);
           
           if (!isPreload && !returnData) {
-            addVideoCard(pageUrl, embedUrl, 'embed', '✅ Dailymotion Embed');
+            addVideoCard(pageUrl, embedUrl, 'embed', '✅ Ready to Play');
           }
           
           return returnData ? videoData : true;
@@ -1585,19 +1815,16 @@
       return match ? match[1] : null;
     }
 
-    // Create video card for grid layout
     function createVideoCard(videoData, index) {
       const card = document.createElement('div');
       card.className = 'video-card';
       card.style.animationDelay = `${index * 0.1}s`;
       
-      const domain = videoData.domain || new URL(videoData.pageUrl).hostname;
-      const title = videoData.metadata?.title || domain;
+      const title = videoData.metadata?.title || 'Video Content';
       
       card.innerHTML = `
         <div class="video-card-header">
           <div class="video-card-title">${title}</div>
-          <div class="video-card-domain">${domain}</div>
         </div>
         <div class="video-container" style="margin: 0;">
           <div class="video-inner">
@@ -1635,7 +1862,7 @@
             Your browser does not support the video tag.
           </video>`;
       } else if (videoData.type === 'embed') {
-        return `<iframe src="${videoData.videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+        return `<iframe src="${videoData.videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>`;
       } else if (videoData.type === 'iframe-direct') {
         return `
           <iframe src="${videoData.pageUrl}" frameborder="0" allowfullscreen 
@@ -1650,12 +1877,9 @@
       const card = document.createElement('div');
       card.className = 'video-card';
       
-      const domain = new URL(url).hostname;
-      
       card.innerHTML = `
         <div class="video-card-header">
           <div class="video-card-title">❌ Failed to Load</div>
-          <div class="video-card-domain">${domain}</div>
         </div>
         <div style="padding: 2rem; text-align: center;">
           <div class="error-card" style="margin: 0;">
@@ -1683,8 +1907,7 @@
     }
 
     function generateVideoHTML(pageUrl, videoUrl, type, status, thumbnail = null, metadata = null) {
-      const domain = new URL(pageUrl).hostname;
-      const title = metadata?.title || domain;
+      const title = metadata?.title || 'Video Content';
       
       let backContent = '';
       
@@ -1695,7 +1918,7 @@
             Your browser does not support the video tag.
           </video>`;
       } else if (type === 'embed') {
-        backContent = `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+        backContent = `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>`;
       } else if (type === 'iframe-direct') {
         backContent = `
           <iframe src="${pageUrl}" frameborder="0" allowfullscreen 
@@ -1719,9 +1942,6 @@
                   <div style="font-size: 0.8rem; margin-top: 0.5rem; color: rgba(255,255,255,0.8);">
                     ${status || 'Click to Play'}
                   </div>
-                  <div style="font-size: 0.7rem; margin-top: 0.3rem; color: rgba(255,255,255,0.6);">
-                    ${domain}
-                  </div>
                 </div>
               ` : `
                 <span class="video-icon">🎥</span>
@@ -1730,7 +1950,6 @@
                 </span>
                 <span>Click to Play</span>
                 <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">${status || ''}</div>
-                <div style="font-size: 0.7rem; margin-top: 0.5rem; opacity: 0.6;">${domain}</div>
               `}
             </div>
             <div class="video-face video-back">
@@ -1763,18 +1982,18 @@
       totalVideos.textContent = allUrls.length;
       backgroundProgress.textContent = '0';
       
-      createPagination(); // Update pagination to show caching button as disabled
+      createPagination();
       
       for (let i = 0; i < allUrls.length; i++) {
-        if (!isBackgroundLoading) break; // Allow stopping
+        if (!isBackgroundLoading) break;
         
         try {
           const url = allUrls[i];
           const cacheKey = `video_${url}`;
           
           if (!videoCache.has(cacheKey)) {
-            await processVideoUrl(url, true); // Silent background load
-            await new Promise(resolve => setTimeout(resolve, 500)); // Rate limiting
+            await processVideoUrl(url, true);
+            await new Promise(resolve => setTimeout(resolve, 300));
           }
           
           backgroundLoadProgress++;
@@ -1796,7 +2015,7 @@
         backgroundStatus.style.display = 'none';
       }, 5000);
       
-      createPagination(); // Update pagination
+      createPagination();
     }
 
     function updateBackgroundStatus() {
@@ -1809,7 +2028,7 @@
       }
     }
 
-    // Fullscreen TikTok-style functionality
+    // Enhanced TikTok-style fullscreen functionality
     function enterFullscreen() {
       const fullscreenContainer = document.getElementById('fullscreenContainer');
       const fullscreenContent = document.getElementById('fullscreenContent');
@@ -1824,32 +2043,48 @@
         fullscreenContent.appendChild(clonedVideo);
         fullscreenContainer.style.display = 'block';
         
-        // Add swipe/scroll functionality
+        updateFullscreenProgress();
+        
+        // Enhanced touch/swipe functionality
         let touchStartY = 0;
+        let touchStartX = 0;
         let isScrolling = false;
         
         fullscreenContainer.addEventListener('touchstart', (e) => {
           touchStartY = e.touches[0].clientY;
+          touchStartX = e.touches[0].clientX;
         });
         
         fullscreenContainer.addEventListener('touchmove', (e) => {
           if (isScrolling) return;
           
           const touchY = e.touches[0].clientY;
-          const diff = touchStartY - touchY;
+          const touchX = e.touches[0].clientX;
+          const diffY = touchStartY - touchY;
+          const diffX = Math.abs(touchStartX - touchX);
           
-          if (Math.abs(diff) > 50) {
+          // Only process vertical swipes
+          if (Math.abs(diffY) > 50 && diffX < 100) {
             isScrolling = true;
-            if (diff > 0) {
-              nextVideo();
+            if (diffY > 0) {
+              nextVideoFullscreen();
             } else {
-              previousVideo();
+              previousVideoFullscreen();
             }
             setTimeout(() => { isScrolling = false; }, 500);
           }
         });
         
-        // Keyboard navigation
+        // Mouse wheel support
+        fullscreenContainer.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          if (e.deltaY > 0) {
+            nextVideoFullscreen();
+          } else {
+            previousVideoFullscreen();
+          }
+        });
+        
         document.addEventListener('keydown', handleFullscreenKeys);
       }
     }
@@ -1864,42 +2099,59 @@
       switch(e.key) {
         case 'ArrowUp':
           e.preventDefault();
-          previousVideo();
+          previousVideoFullscreen();
           break;
         case 'ArrowDown':
           e.preventDefault();
-          nextVideo();
+          nextVideoFullscreen();
           break;
         case 'Escape':
           exitFullscreen();
           break;
         case ' ':
           e.preventDefault();
-          randomVideo();
+          randomVideoFullscreen();
           break;
       }
     }
 
-    function nextVideo() {
+    function nextVideoFullscreen() {
       const totalPages = getPageBoundaries().length;
-      if (currentPage < totalPages - 1) {
-        changePage(currentPage + 1);
-        setTimeout(updateFullscreenVideo, 1000);
+      if (fullscreenVideoIndex < totalPages - 1) {
+        fullscreenVideoIndex++;
+        changePage(fullscreenVideoIndex);
+        setTimeout(updateFullscreenVideo, 800);
       }
     }
 
-    function previousVideo() {
-      if (currentPage > 0) {
-        changePage(currentPage - 1);
-        setTimeout(updateFullscreenVideo, 1000);
+    function previousVideoFullscreen() {
+      if (fullscreenVideoIndex > 0) {
+        fullscreenVideoIndex--;
+        changePage(fullscreenVideoIndex);
+        setTimeout(updateFullscreenVideo, 800);
       }
     }
 
-    function randomVideo() {
+    function randomVideoFullscreen() {
       const totalPages = getPageBoundaries().length;
-      const randomPage = Math.floor(Math.random() * totalPages);
-      changePage(randomPage);
-      setTimeout(updateFullscreenVideo, 1000);
+      fullscreenVideoIndex = Math.floor(Math.random() * totalPages);
+      changePage(fullscreenVideoIndex);
+      setTimeout(updateFullscreenVideo, 800);
+    }
+
+    function shareVideo() {
+      const currentUrl = window.location.href;
+      if (navigator.share) {
+        navigator.share({
+          title: 'Smart Video Player Pro',
+          text: 'Check out this amazing video player!',
+          url: currentUrl
+        });
+      } else {
+        navigator.clipboard.writeText(currentUrl).then(() => {
+          alert('Link copied to clipboard!');
+        });
+      }
     }
 
     function updateFullscreenVideo() {
@@ -1914,17 +2166,24 @@
           
           fullscreenContent.innerHTML = '';
           fullscreenContent.appendChild(clonedVideo);
+          updateFullscreenProgress();
         }
       }
     }
 
-    // Enhanced Products Loading with Pagination
+    function updateFullscreenProgress() {
+      const progressEl = document.getElementById('fullscreenProgress');
+      const totalPages = getPageBoundaries().length;
+      progressEl.textContent = `Video ${fullscreenVideoIndex + 1} of ${totalPages}`;
+    }
+
+    // Enhanced Products Loading
     async function loadProductsFromJSON() {
       try {
         const response = await fetch('https://raw.githubusercontent.com/MustakimRidoyMR/MustakimRidoyMR.github.io/main/MR%20Database/affiliate.json');
         
         if (!response.ok) {
-          throw new Error('ডেটা লোড করতে সমস্যা হয়েছে');
+          throw new Error('Data loading failed');
         }
 
         productsData = await response.json();
@@ -1933,7 +2192,7 @@
         createProductPagination();
         
       } catch (error) {
-        console.error('ডেটা লোড করতে সমস্যা:', error);
+        console.error('Product loading error:', error);
         loadFallbackProducts();
       }
     }
@@ -1941,32 +2200,32 @@
     function loadFallbackProducts() {
       productsData = [
         {
-          "title": "Product: Hand Grip 5-60Kg Adjustable Hand Strengthener Grip Trainer - Hand Grip - Lifestyle",
-          "text": "I found this great deal on Daraz! Check it out! \nProduct Price: ৳550\nDiscount Price: ৳145",
+          "title": "Hand Grip Strengthener - Adjustable 5-60Kg",
+          "text": "Premium quality hand grip trainer for strength building. Adjustable resistance from 5-60kg. Perfect for fitness enthusiasts!",
           "button": "Buy Now",
           "url": "https://s.daraz.com.bd/s.ZSqA5?cc",
           "image": "https://static-01.daraz.com.bd/p/7b621f977a71e0423fce9296b1987fb4.jpg"
         },
         {
-          "title": "New Feature",
-          "text": "Check to click here",
-          "button": "Buy Now",
-          "url": "https://amzn.to/3NOG3er",
-          "image": "https://raw.githubusercontent.com/MustakimRidoyMR/MustakimRidoyMR.github.io/main/Images/Apk%20Cover%20Photo.jpeg"
+          "title": "AI-Powered Productivity Tools",
+          "text": "Boost your productivity with cutting-edge AI tools and automation solutions.",
+          "button": "Try Now",
+          "url": "https://mustakimridoymr.github.io",
+          "image": "https://incubator.ucf.edu/wp-content/uploads/2023/07/artificial-intelligence-new-technology-science-futuristic-abstract-human-brain-ai-technology-cpu-central-processor-unit-c[...]"
         },
         {
-          "title": "Update version 1",
-          "text": "Check it now",
-          "button": "Buy Now",
+          "title": "Smart Lifestyle Products",
+          "text": "Discover innovative products that enhance your daily life and productivity.",
+          "button": "Explore",
           "url": "https://amzn.to/3NOG3er",
           "image": "https://t3.ftcdn.net/jpg/02/93/37/28/360_F_293372811_2gpgNsJ3TQSPsfAbmBPIYfuKfAw70bpt.jpg"
         },
         {
-          "title": "Use AI",
-          "text": "Use AI for your work",
-          "button": "Try Now",
-          "url": "https://mustakimridoymr.github.io",
-          "image": "https://incubator.ucf.edu/wp-content/uploads/2023/07/artificial-intelligence-new-technology-science-futuristic-abstract-human-brain-ai-technology-cpu-central-processor-unit-c[...]"
+          "title": "Premium Video Collection",
+          "text": "Access exclusive video content and premium streaming collections.",
+          "button": "Access Now",
+          "url": "https://www.profitableratecpm.com/xhjfmx5aty?key=52605e1088aa60e296bd2cb234e5d209",
+          "image": "https://raw.githubusercontent.com/MustakimRidoyMR/MustakimRidoyMR.github.io/main/Images/Apk%20Cover%20Photo.jpeg"
         }
       ];
       
@@ -2006,11 +2265,11 @@
       currentProductPage = pageIndex;
     }
 
-       function shuffle(array) {
-     for (let i = array.length - 1; i > 0; i--) {
-       const j = Math.floor(Math.random() * (i + 1));
-       [array[i], array[j]] = [array[j], array[i]];
-     }
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
 
     function createProductPagination() {
@@ -2031,54 +2290,60 @@
       paginationEl.style.display = 'flex';
     }
 
-    // Main initialization
+    // Main initialization with instant loading
     (async function() {
       createParticles();
       
-      const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
-      const loadingEl = document.getElementById('loading');
+      // Start with ready URLs for instant experience
+      allUrls = [...readyUrls];
       
+      updateStatus('Ready videos loading instantly...');
+      updateProgress(20, 'Loading first video...');
+      
+      // Load first page immediately
       try {
-        updateStatus('Downloading URL list...');
-        updateProgress(10, 'Connecting to server...');
-        
-        const res = await fetch(rawListURL);
-        if (!res.ok) throw new Error('Failed to load video list');
-        
-        updateProgress(30, 'Processing video URLs...');
-        
-        const text = await res.text();
-        allUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
-        
-        if (allUrls.length === 0) {
-          throw new Error('No valid URLs found');
-        }
-
-        shuffle(allUrls);
-
-        updateStatus(`Found ${allUrls.length} videos. Loading first video...`);
-        updateProgress(80, 'Setting up interface...');
-        
-        // Initialize with first page
         await loadCurrentPageVideo();
         createPagination();
-        
         updateProgress(100, 'Ready!');
-
-        // Load products in background
-        setTimeout(loadProductsFromJSON, 1500);
-        
-        // Start background caching after initial load
-        setTimeout(() => {
-          if (!isBackgroundLoading) {
-            console.log('Background caching available. Click "Cache All" to start.');
-          }
-        }, 3000);
-
       } catch (err) {
-        loadingEl.innerHTML = `<div class="error-card">⚠️ ${err.message}</div>`;
-        return;
+        console.warn('Initial load error:', err);
       }
+      
+      // Load full URL list in background
+      setTimeout(async () => {
+        try {
+          const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
+          const res = await fetch(rawListURL);
+          if (res.ok) {
+            const text = await res.text();
+            const newUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
+            
+            if (newUrls.length > 0) {
+              // Merge with ready URLs, avoid duplicates
+              const uniqueUrls = [...new Set([...readyUrls, ...newUrls])];
+              shuffle(uniqueUrls);
+              allUrls = uniqueUrls;
+              
+              // Update pagination with new count
+              createPagination();
+              console.log(`Loaded ${allUrls.length} total videos`);
+            }
+          }
+        } catch (err) {
+          console.warn('Background URL loading failed:', err);
+        }
+      }, 2000);
+
+      // Load products
+      setTimeout(loadProductsFromJSON, 1000);
+      
+      // Hide search suggestions on outside click
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#searchInput') && !e.target.closest('#searchSuggestions')) {
+          hideSearchSuggestions();
+        }
+      });
+      
     })();
   </script>
 
