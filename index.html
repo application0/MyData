@@ -1928,6 +1928,7 @@
         }
 
         productsData = await response.json();
+        shuffle(productsData);
         displayProductPage(0);
         createProductPagination();
         
@@ -2005,6 +2006,13 @@
       currentProductPage = pageIndex;
     }
 
+       function shuffle(array) {
+     for (let i = array.length - 1; i > 0; i--) {
+       const j = Math.floor(Math.random() * (i + 1));
+       [array[i], array[j]] = [array[j], array[i]];
+     }
+    }
+
     function createProductPagination() {
       const totalPages = Math.ceil(productsData.length / productsPerPage);
       if (totalPages <= 1) return;
@@ -2045,6 +2053,8 @@
         if (allUrls.length === 0) {
           throw new Error('No valid URLs found');
         }
+
+        shuffle(allUrls);
 
         updateStatus(`Found ${allUrls.length} videos. Loading first video...`);
         updateProgress(80, 'Setting up interface...');
