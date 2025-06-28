@@ -1000,14 +1000,14 @@
         suggestions.innerHTML = matches.map(url => {
           const domain = new URL(url).hostname;
           return `
-            <div onclick="selectSuggestion('${url}')" 
+            <div onclick="selectSuggestion('Video')" 
                  style="padding: 0.7rem 1rem; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1);
                         transition: background 0.2s ease;"
                  onmouseover="this.style.background='rgba(255,255,255,0.1)'"
                  onmouseout="this.style.background='transparent'">
-              <div style="font-size: 0.9rem; color: white;">${domain}</div>
+              <div style="font-size: 0.9rem; color: white;">touch to show</div>
               <div style="font-size: 0.7rem; color: rgba(255,255,255,0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                ${url}
+                Free
               </div>
             </div>
           `;
@@ -1326,7 +1326,7 @@
       const cacheKey = `video_${pageUrl}`;
       
       if (!isPreload) {
-        updateStatus(`Extracting video from ${domain}...`);
+        updateStatus(`Extracting video... please wait...`);
       }
       
       // Extract metadata first
