@@ -2253,6 +2253,7 @@
         displayProductPage(0);
         createProductPagination();
         
+      enterFullscreen();
       } catch (error) {
         console.error('Product loading error:', error);
         loadFallbackProducts();
@@ -2405,7 +2406,6 @@
           hideSearchSuggestions();
         }
       });
-      enterFullscreen();
     })();
   </script>
 
