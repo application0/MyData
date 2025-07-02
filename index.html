@@ -2157,6 +2157,16 @@
       document.removeEventListener('keydown', handleFullscreenKeys);
     }
 
+    window.addEventListener('popstate', function(event) {
+      
+      exitFullscreen();
+    // alert('আপনি কি সত্যিই এই পেজ থেকে চলে যেতে চান?');
+    // URL চেক করে নির্দিষ্ট অ্যাকশন নিতে
+    // if (event.state && event.state.fromPage === 'someSpecificPage') {
+    //     // Do something specific
+    // }
+});
+
     function handleFullscreenKeys(e) {
       switch(e.key) {
         case 'ArrowUp':
