@@ -27,7 +27,6 @@
       --control-bg: rgba(0,0,0,0.8);
       --control-border: rgba(255,255,255,0.2);
     }
-
     * {
       margin: 0;
       padding: 0;
@@ -37,7 +36,6 @@
       -ms-user-select: none;
       user-select: none;
     }
-
     body {
       font-family: 'Segoe UI', 'Roboto', sans-serif;
       background: var(--bg-dark);
@@ -47,12 +45,10 @@
       width: 100vw;
       height: 100vh;
     }
-
     body.light-theme {
       background: var(--bg-light);
       color: var(--text-light);
     }
-
     video {
       pointer-events: auto;
       -webkit-user-select: none;
@@ -60,11 +56,9 @@
       -ms-user-select: none;
       user-select: none;
     }
-
     video::-webkit-media-controls-download-button {
       display: none;
     }
-
     /* Main Container */
     .fullscreen-container {
       position: fixed;
@@ -76,14 +70,12 @@
       z-index: 1000;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
     }
-
     .light-theme .fullscreen-container {
       background: var(--bg-light);
     }
-
     /* Video Display Area */
     .video-display {
       position: relative;
@@ -94,7 +86,6 @@
       justify-content: center;
       background: var(--bg-dark);
     }
-
     .video-content {
       position: relative;
       width: 100%;
@@ -103,7 +94,6 @@
       align-items: center;
       justify-content: center;
     }
-
     /* FIXED: Proper fullscreen video display */
     .fullscreen-video {
       width: 100vw;
@@ -117,7 +107,6 @@
       left: 0;
       z-index: 1;
     }
-
     .fullscreen-iframe {
       width: 100vw;
       height: 100vh;
@@ -128,7 +117,6 @@
       left: 0;
       z-index: 1;
     }
-
     /* FIXED: Thumbnail display in preview mode */
     .video-thumbnail-display {
       position: relative;
@@ -139,7 +127,6 @@
       justify-content: center;
       background: var(--bg-dark);
     }
-
     .preview-thumbnail {
       width: 100%;
       height: 100%;
@@ -147,7 +134,6 @@
       object-position: center;
       border-radius: 0;
     }
-
     .thumbnail-overlay {
       position: absolute;
       top: 0;
@@ -161,7 +147,6 @@
       justify-content: center;
       z-index: 2;
     }
-
     .large-play-button {
       width: 120px;
       height: 120px;
@@ -175,34 +160,26 @@
       animation: pulse 2s ease-in-out infinite;
       cursor: pointer;
       box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-      margin-bottom: 2rem;
       transition: all 0.3s ease;
     }
-
     .large-play-button:hover {
       transform: scale(1.1);
       background: rgba(255,255,255,1);
     }
-
     .video-title-overlay {
       text-align: center;
       color: white;
       padding: 0 2rem;
     }
-
     .video-title-main {
       font-size: 1.8rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     }
-
     .video-subtitle {
       font-size: 1rem;
       opacity: 0.9;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
-
     /* Navigation Controls */
     .fullscreen-controls {
       position: fixed;
@@ -216,7 +193,6 @@
       transform: translateX(0);
       transition: all 0.3s ease;
     }
-
     .control-button {
       width: 55px;
       height: 55px;
@@ -233,18 +209,15 @@
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-
     .control-button:hover {
       background: var(--primary-color);
       border-color: var(--primary-color);
       transform: scale(1.1);
       box-shadow: 0 6px 25px rgba(93, 92, 222, 0.4);
     }
-
     .control-button:active {
       transform: scale(0.95);
     }
-
     /* Home Button */
     .home-button {
       position: fixed;
@@ -266,13 +239,11 @@
       align-items: center;
       gap: 0.5rem;
     }
-
     .home-button:hover {
       background: var(--success-color);
       border-color: var(--success-color);
       transform: scale(1.05);
     }
-
     /* Bottom Navigation */
     .bottom-navigation {
       position: fixed;
@@ -286,7 +257,6 @@
       transform: translateY(0);
       transition: all 0.3s ease;
     }
-
     .navigation-content {
       max-width: 1200px;
       margin: 0 auto;
@@ -296,7 +266,6 @@
       gap: 2rem;
       flex-wrap: wrap;
     }
-
     .nav-button {
       background: var(--control-bg);
       border: 2px solid var(--control-border);
@@ -313,34 +282,28 @@
       align-items: center;
       gap: 0.5rem;
     }
-
     .nav-button:hover {
       background: var(--primary-color);
       border-color: var(--primary-color);
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(93, 92, 222, 0.4);
     }
-
     .nav-button.secondary {
       background: var(--control-bg);
       border-color: var(--accent-color);
     }
-
     .nav-button.secondary:hover {
       background: var(--accent-color);
       border-color: var(--accent-color);
     }
-
     .nav-button.danger {
       background: var(--control-bg);
       border-color: var(--secondary-color);
     }
-
     .nav-button.danger:hover {
       background: var(--secondary-color);
       border-color: var(--secondary-color);
     }
-
     /* Progress and Info Display */
     .progress-display {
       position: fixed;
@@ -361,7 +324,6 @@
       transform: translateX(-50%) translateY(0);
       transition: all 0.3s ease;
     }
-
     /* Loading States */
     .loading-overlay {
       position: absolute;
@@ -376,7 +338,6 @@
       justify-content: center;
       z-index: 10;
     }
-
     .loading-spinner {
       border: 4px solid rgba(255,255,255,0.3);
       border-radius: 50%;
@@ -386,7 +347,6 @@
       animation: spin 1s linear infinite;
       margin-bottom: 2rem;
     }
-
     .loading-text {
       color: white;
       font-size: 1.2rem;
@@ -394,7 +354,6 @@
       text-align: center;
       margin-bottom: 1rem;
     }
-
     .loading-progress {
       width: 300px;
       height: 4px;
@@ -403,20 +362,17 @@
       overflow: hidden;
       margin-bottom: 1rem;
     }
-
     .loading-progress-fill {
       height: 100%;
       background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
       border-radius: 2rem;
       transition: width 0.3s ease;
     }
-
     .loading-status {
       color: rgba(255,255,255,0.8);
       font-size: 0.9rem;
       text-align: center;
     }
-
     /* Error States */
     .error-display {
       position: absolute;
@@ -434,37 +390,32 @@
       padding: 2rem;
       z-index: 10;
     }
-
     .error-icon {
       font-size: 4rem;
       margin-bottom: 2rem;
       opacity: 0.8;
     }
-
     .error-title {
       font-size: 2rem;
       font-weight: 700;
       margin-bottom: 1rem;
     }
-
     .error-message {
       font-size: 1.1rem;
       opacity: 0.9;
       margin-bottom: 2rem;
       line-height: 1.5;
     }
-
     .error-actions {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
       justify-content: center;
     }
-
-    /* Single Compact Ad */
+    /* Single Ad Placement - Fixed to one Adsterra ad */
     .video-ad {
       position: fixed;
-      bottom: 200px;
+      bottom: 120px;
       right: 20px;
       background: var(--control-bg);
       backdrop-filter: blur(10px);
@@ -476,46 +427,68 @@
       opacity: 0.8;
       transition: all 0.3s ease;
     }
-
     .video-ad:hover {
       opacity: 1;
       transform: scale(1.02);
     }
-
+    /* Affiliate Link Container */
+    .affiliate-container {
+      position: fixed;
+      bottom: 200px;
+      left: 20px;
+      background: var(--control-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 0.5rem;
+      padding: 0.8rem;
+      border: 1px solid var(--control-border);
+      z-index: 1002;
+      max-width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+    .affiliate-container:hover {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    .affiliate-image {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
+    .affiliate-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.3rem;
+    }
+    .affiliate-button {
+      background: linear-gradient(135deg, var(--secondary-color), #ff8e53);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+    .affiliate-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+    }
     /* Responsive Design */
     @media (max-width: 768px) {
-      .fullscreen-controls {
-        top: 10px;
-        right: 10px;
-        gap: 10px;
-      }
-      
       .control-button {
         width: 45px;
         height: 45px;
         font-size: 1.1rem;
-      }
-      
-      .home-button {
-        top: 10px;
-        left: 10px;
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
-      }
-      
-      .bottom-navigation {
-        padding: 1rem 1rem 0.5rem 1rem;
-      }
-      
-      .nav-button {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.8rem;
-      }
-      
-      .progress-display {
-        bottom: 100px;
-        padding: 0.8rem 1.5rem;
-        font-size: 0.9rem;
       }
       
       .large-play-button {
@@ -533,13 +506,22 @@
         font-size: 0.9rem;
       }
       
+      .progress-display {
+        bottom: 100px;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+      }
+      
       .video-ad {
-        bottom: 120px;
-        right: 10px;
+        bottom: 100px;
         max-width: 150px;
       }
+      
+      .affiliate-container {
+        bottom: 160px;
+        max-width: 200px;
+      }
     }
-
     @media (max-width: 480px) {
       .control-button {
         width: 40px;
@@ -576,35 +558,34 @@
         bottom: 100px;
         max-width: 120px;
       }
+      
+      .affiliate-container {
+        bottom: 140px;
+        max-width: 180px;
+      }
     }
-
     /* Animations */
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.05); opacity: 0.8; }
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
     @keyframes fadeInOut {
       0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
       20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
     }
-
     /* Video transition effects */
     .video-transition {
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     .video-transition.switching {
       transform: scale(0.95);
       opacity: 0.7;
     }
-
     /* Hide scroll indicators */
     .swipe-indicator {
       display: none;
@@ -619,7 +600,6 @@
     <a href="index.html" class="home-button" id="homeButton">
       🏠 Home
     </a>
-
     <!-- Top Right Controls -->
     <div class="fullscreen-controls" id="fullscreenControls">
       <button class="control-button" onclick="exitFullscreen()" title="Exit Fullscreen" aria-label="Exit Fullscreen">
@@ -638,12 +618,10 @@
         📤
       </button>
     </div>
-
     <!-- Progress Display -->
     <div class="progress-display" id="progressDisplay">
       Video 1 of 1
     </div>
-
     <!-- Main Video Display Area -->
     <div class="video-display" id="videoDisplay">
       <div class="video-content" id="videoContent">
@@ -660,7 +638,6 @@
         <!-- Video content will be inserted here -->
       </div>
     </div>
-
     <!-- Bottom Navigation - Button Only Navigation -->
     <div class="bottom-navigation" id="bottomNavigation">
       <div class="navigation-content">
@@ -678,10 +655,9 @@
         </button>
       </div>
     </div>
-
-    <!-- Single Compact Ad per Video -->
+    <!-- Single Adsterra Ad -->
     <div class="video-ad" id="videoAd">
-      <script type="text/javascript">
+      <script type='text/javascript'>
         atOptions = {
           'key' : '84fb95635357c8ec40e2f84914bc10a5',
           'format' : 'iframe',
@@ -690,11 +666,19 @@
           'params' : {}
         };
       </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+      <script type='text/javascript' src='//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js'></script>
+    </div>
+    
+    <!-- Affiliate Link with Image -->
+    <div class="affiliate-container" id="affiliateContainer">
+      <img src="https://picsum.photos/seed/product123/250/100.jpg" alt="Premium Video Tools" class="affiliate-image">
+      <div class="affiliate-title">Premium Video Tools & Resources</div>
+      <a href="https://www.profitableratecpm.com/xhjfmx5aty?key=52605e1088aa60e296bd2cb234e5d209" target="_blank" class="affiliate-button">
+        🎬 Get Premium Tools
+      </a>
     </div>
     
   </div>
-
   <script>
     // Global Variables
     let allUrls = [];
@@ -705,16 +689,14 @@
     let isLoading = false;
     let autoPlay = false;
     let isVideoLoaded = false;
-
     // Ready URLs for instant loading - start with one random video
     const readyUrls = [
-      'https://xxnx-world.blogspot.com',
       'https://xhamster.com/videos/my-roommate-fucks-me-hard-in-missionary-then-pull-my-hair-while-fucking-in-doggystyle-while-cuckold-works-xhXWArs',
       'https://xhamster.com/videos/teensex66-shh-shh-quiet-come-lets-fuck-xhb4BOz',
+      'https://xxnx-world.blogspot.com',
       'https://xhamster.com/videos/compilation-wrong-holes-with-big-cumshots-xhuv92G',
       'https://xhamster.com/videos/step-father-seduces-skinny-teens-and-fucks-hairy-pussy-in-threesome-uncensored-xhKaSHl'
     ];
-
     // Disable right-click and key combinations
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', function(e) {
@@ -726,9 +708,7 @@
         return false;
       }
     });
-
     document.onselectstart = function() { return false; };
-
     // Progress and Status Updates
     function updateProgress(percent, status = null) {
       const progressFill = document.getElementById('loadingProgressFill');
@@ -742,26 +722,22 @@
         statusEl.textContent = status;
       }
     }
-
     function updateLoadingText(text) {
       const loadingText = document.getElementById('loadingText');
       if (loadingText) {
         loadingText.textContent = text;
       }
     }
-
     function updateProgressDisplay() {
       const progressDisplay = document.getElementById('progressDisplay');
       if (progressDisplay) {
         progressDisplay.textContent = `Video ${currentVideoIndex + 1} of ${allUrls.length}`;
       }
     }
-
     // Navigation Functions - Button Only
     function exitFullscreen() {
       window.location.href = 'index.html';
     }
-
     function nextVideo() {
       if (currentVideoIndex < allUrls.length - 1) {
         currentVideoIndex++;
@@ -771,7 +747,6 @@
         showNotification('This is the last video');
       }
     }
-
     function previousVideo() {
       if (currentVideoIndex > 0) {
         currentVideoIndex--;
@@ -781,7 +756,6 @@
         showNotification('This is the first video');
       }
     }
-
     function randomVideo() {
       const newIndex = Math.floor(Math.random() * allUrls.length);
       if (newIndex !== currentVideoIndex) {
@@ -790,7 +764,6 @@
         updateProgressDisplay();
       }
     }
-
     function shareVideo() {
       const currentUrl = allUrls[currentVideoIndex];
       if (navigator.share) {
@@ -808,7 +781,6 @@
         });
       }
     }
-
     // Player Controls
     function toggleAutoplay() {
       autoPlay = !autoPlay;
@@ -823,33 +795,19 @@
       
       localStorage.setItem('autoPlay', autoPlay);
     }
-
     // Keyboard Shortcuts - Only for navigation buttons
     function initializeKeyboardHandlers() {
       document.addEventListener('keydown', (e) => {
         switch(e.key) {
           case 'ArrowUp':
-            e.preventDefault();
-            previousVideo();
-            break;
-          case 'ArrowDown':
-            e.preventDefault();
-            nextVideo();
-            break;
           case 'ArrowLeft':
             e.preventDefault();
             previousVideo();
             break;
+          case 'ArrowDown':
           case 'ArrowRight':
             e.preventDefault();
             nextVideo();
-            break;
-          case ' ': // Spacebar
-            e.preventDefault();
-            toggleVideoPlayback();
-            break;
-          case 'Escape':
-            exitFullscreen();
             break;
           case 'r':
           case 'R':
@@ -862,21 +820,9 @@
         }
       });
     }
-
-    function toggleVideoPlayback() {
-      const video = document.querySelector('.fullscreen-video');
-      if (video) {
-        if (video.paused) {
-          video.play().catch(e => console.log('Play failed:', e));
-        } else {
-          video.pause();
-        }
-      }
-    }
-
     // Video Loading and Display - Optimized
     async function loadCurrentVideo() {
-      if (isLoading || currentVideoIndex >= allUrls.length) return;
+      if (isLoading) return;
       
       isLoading = true;
       isVideoLoaded = false;
@@ -924,7 +870,6 @@
         }, 800);
       }
     }
-
     function displayVideo(videoData) {
       const videoContent = document.getElementById('videoContent');
       const domain = extractDomain(videoData.pageUrl);
@@ -1016,12 +961,10 @@
         });
       }
     }
-
     function playVideoFromThumbnail(url) {
       // Try to load the actual video
       loadCurrentVideo();
     }
-
     // Video Processing - Simplified and Optimized
     async function processVideoUrl(pageUrl) {
       updateProgress(30, 'Extracting video data...');
@@ -1040,17 +983,21 @@
           `https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`,
           `https://corsproxy.io/?${encodeURIComponent(pageUrl)}`
         ];
-
         for (const proxyUrl of proxyServices) {
           try {
             const response = await fetch(proxyUrl);
             if (!response.ok) continue;
-
-            const data = await response.json();
-            const html = data.contents || data;
+            
+            let html;
+            if (proxyUrl.includes('allorigins')) {
+              const data = await response.json();
+              html = data.contents;
+            } else {
+              html = await response.text();
+            }
             
             const videoUrl = extractVideoFromHtml(html, pageUrl);
-            const thumbnail = extractThumbnailFromHtml(html, pageUrl);
+            const thumbnail = await extractThumbnailFromHtml(html, pageUrl);
             const metadata = extractMetadataFromHtml(html);
             
             if (videoUrl) {
@@ -1092,7 +1039,7 @@
         throw new Error('Failed to process video URL');
       }
     }
-
+    // Enhanced Special Platform Handling
     async function trySpecialPlatforms(pageUrl) {
       const url = new URL(pageUrl);
       
@@ -1131,7 +1078,6 @@
       
       return null;
     }
-
     // Utility Functions
     function extractDomain(url) {
       try {
@@ -1140,21 +1086,17 @@
         return url;
       }
     }
-
     function extractYouTubeId(url) {
       const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
       const match = url.match(regex);
       return match ? match[1] : null;
     }
-
     function extractVideoFromHtml(html, baseUrl) {
       const extractors = [
         /<video[^>]*src=["']([^"'>]+)["']/gi,
         /<source[^>]*src=["']([^"'>]+)["']/gi,
-        /<meta[^>]+property=["']og:video:url["'][^>]+content=["']([^"'>]+)["']/gi,
         /https?:\/\/[^\s"'<>()]+\.(?:mp4|webm|ogg|m3u8)(?:\?[^\s"'<>()]*)?/gi
       ];
-
       for (const regex of extractors) {
         let match;
         while ((match = regex.exec(html)) !== null) {
@@ -1176,14 +1118,12 @@
       
       return null;
     }
-
     function extractThumbnailFromHtml(html, baseUrl) {
       const thumbnailRegexes = [
         /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"'>]+)["']/gi,
         /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"'>]+)["']/gi,
         /<video[^>]+poster=["']([^"'>]+)["']/gi
       ];
-
       for (const regex of thumbnailRegexes) {
         const match = regex.exec(html);
         if (match && match[1]) {
@@ -1205,7 +1145,6 @@
       
       return null;
     }
-
     function extractMetadataFromHtml(html) {
       try {
         const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
@@ -1219,7 +1158,6 @@
         return { title: 'Video Content', description: '' };
       }
     }
-
     // Error Handling
     function showError(title, message) {
       const videoContent = document.getElementById('videoContent');
@@ -1237,7 +1175,6 @@
         </div>
       `;
     }
-
     // Notification System
     function showNotification(message) {
       const notification = document.createElement('div');
@@ -1266,7 +1203,6 @@
         }
       }, 3000);
     }
-
     // Load saved preferences
     function loadPreferences() {
       const savedAutoPlay = localStorage.getItem('autoPlay');
@@ -1280,7 +1216,6 @@
         }
       }
     }
-
     // Optimized Initialization - Start with one random video
     (async function init() {
       loadPreferences();
@@ -1316,7 +1251,7 @@
             const newUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
             
             if (newUrls.length > 0) {
-              // Merge and shuffle, but keep current video as first
+              // Merge with ready URLs, but keep current video as first
               const currentUrl = allUrls[0];
               const uniqueUrls = [...new Set([currentUrl, ...newUrls])];
               
@@ -1337,7 +1272,6 @@
       }, 3000);
       
     })();
-
     // Prevent back navigation
     window.addEventListener('popstate', function(event) {
       exitFullscreen();
