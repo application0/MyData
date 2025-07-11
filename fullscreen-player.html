@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type='text/javascript' src='//pl27022518.profitableratecpm.com/c9/4a/0b/c94a0b4ed40971010199e9dd59a95e25.js'></script>
+  <script type='text/javascript' src='//pl27022539.profitableratecpm.com/99/05/75/9905753e8d9eea31d7017cc9d3c18caa.js'></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fullscreen Player - Smart Video Player Pro</title>
+  <meta name="description" content="Immersive fullscreen video experience with TikTok-style navigation and advanced controls">
+  <meta name="keywords" content="fullscreen video player, immersive experience, video streaming, mobile-friendly player">
+  
+  <link rel="icon" href="https://raw.githubusercontent.com/application0/MyData/refs/heads/main/indicator_ic_mp_playing_list.png" type="image/x-icon">
+  <meta name="theme-color" content="#000000">
+  
+  <style>
+    :root {
+      --primary-color: #5D5CDE;
+      --secondary-color: #ff6b6b;
+      --accent-color: #4ecdc4;
+      --success-color: #44a08d;
+      --warning-color: #f7971e;
+      --error-color: #ee5a24;
+      --bg-light: #FFFFFF;
+      --bg-dark: #000000;
+      --text-light: #222;
+      --text-dark: #ffffff;
+      --overlay-light: rgba(255,255,255,0.1);
+      --overlay-dark: rgba(0,0,0,0.7);
+      --control-bg: rgba(0,0,0,0.8);
+      --control-border: rgba(255,255,255,0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      overflow: hidden;
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      touch-action: pan-y;
+    }
+
+    body.light-theme {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    video {
+      pointer-events: auto;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    video::-webkit-media-controls-download-button {
+      display: none;
+    }
+
+    /* Main Container */
+    .fullscreen-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-dark);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      touch-action: pan-y;
+    }
+
+    .light-theme .fullscreen-container {
+      background: var(--bg-light);
+    }
+
+    /* Video Display Area */
+    .video-display {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+    }
+
+    .video-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* FIXED: Proper fullscreen video display */
+    .fullscreen-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Changed from cover to contain for full video visibility */
+      object-position: center;
+      background: var(--bg-dark);
+      border: none;
+    }
+
+    .fullscreen-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: var(--bg-dark);
+    }
+
+    /* FIXED: Thumbnail display in preview mode */
+    .video-thumbnail-display {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+    }
+
+    .preview-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Fixed: shows full thumbnail */
+      object-position: center;
+      border-radius: 0;
+    }
+
+    .thumbnail-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .large-play-button {
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #333;
+      animation: pulse 2s ease-in-out infinite;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .large-play-button:hover {
+      transform: scale(1.1);
+      background: rgba(255,255,255,1);
+    }
+
+    .video-title-overlay {
+      text-align: center;
+      color: white;
+      padding: 0 2rem;
+    }
+
+    .video-title-main {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .video-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    /* Navigation Controls */
+    .fullscreen-controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1001;
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 0.3s ease;
+    }
+
+    .fullscreen-controls.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .control-button {
+      width: 55px;
+      height: 55px;
+      background: var(--control-bg);
+      border: 2px solid var(--control-border);
+      border-radius: 50%;
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .control-button:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(93, 92, 222, 0.4);
+    }
+
+    .control-button:active {
+      transform: scale(0.95);
+    }
+
+    /* Bottom Navigation */
+    .bottom-navigation {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, var(--overlay-dark));
+      padding: 2rem 2rem 1rem 2rem;
+      z-index: 1001;
+      opacity: 0;
+      transform: translateY(100px);
+      transition: all 0.3s ease;
+    }
+
+    .bottom-navigation.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .navigation-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-button {
+      background: var(--control-bg);
+      border: 2px solid var(--control-border);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-button:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(93, 92, 222, 0.4);
+    }
+
+    .nav-button.secondary {
+      background: var(--control-bg);
+      border-color: var(--accent-color);
+    }
+
+    .nav-button.secondary:hover {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .nav-button.danger {
+      background: var(--control-bg);
+      border-color: var(--secondary-color);
+    }
+
+    .nav-button.danger:hover {
+      background: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+
+    /* Progress and Info Display */
+    .progress-display {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--control-bg);
+      border: 2px solid var(--control-border);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 1001;
+      opacity: 0;
+      transform: translateX(-50%) translateY(50px);
+      transition: all 0.3s ease;
+    }
+
+    .progress-display.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Swipe Indicators */
+    .swipe-indicator {
+      position: fixed;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+      writing-mode: vertical-lr;
+      text-orientation: mixed;
+      pointer-events: none;
+      animation: pulse 2s ease-in-out infinite;
+      z-index: 1001;
+      background: var(--control-bg);
+      padding: 1rem 0.5rem;
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .swipe-hint {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1rem;
+      text-align: center;
+      pointer-events: none;
+      z-index: 1001;
+      background: var(--control-bg);
+      padding: 1.5rem 2rem;
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+      animation: fadeInOut 3s ease-in-out;
+      animation-fill-mode: forwards;
+    }
+
+    /* Loading States */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary-color);
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 2rem;
+    }
+
+    .loading-text {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .loading-progress {
+      width: 300px;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .loading-progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      border-radius: 2rem;
+      transition: width 0.3s ease;
+    }
+
+    .loading-status {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* Error States */
+    .error-display {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--error-color), #c0392b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      z-index: 10;
+    }
+
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+
+    .error-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle-fullscreen {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--control-bg);
+      border: 2px solid var(--control-border);
+      color: white;
+      border-radius: 50px;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      z-index: 1001;
+      opacity: 0;
+      transform: translateX(-100px);
+    }
+
+    .theme-toggle-fullscreen.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .theme-toggle-fullscreen:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      transform: scale(1.05);
+    }
+
+    /* Ad Containers for Fullscreen */
+    .fullscreen-ads {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      z-index: 1002;
+      opacity: 0;
+      transform: translateX(-50%) translateY(50px);
+      transition: all 0.3s ease;
+    }
+
+    .fullscreen-ads.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .fullscreen-ad {
+      background: var(--control-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--control-border);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .fullscreen-controls {
+        top: 10px;
+        right: 10px;
+        gap: 10px;
+      }
+      
+      .control-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+      }
+      
+      .theme-toggle-fullscreen {
+        top: 10px;
+        left: 10px;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+      }
+      
+      .bottom-navigation {
+        padding: 1.5rem 1rem 0.5rem 1rem;
+      }
+      
+      .navigation-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav-section {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .nav-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8rem;
+      }
+      
+      .progress-display {
+        bottom: 80px;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .large-play-button {
+        width: 100px;
+        height: 100px;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .video-title-main {
+        font-size: 1.5rem;
+      }
+      
+      .video-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .swipe-indicator {
+        right: 10px;
+        padding: 0.8rem 0.4rem;
+        font-size: 0.7rem;
+      }
+      
+      .fullscreen-ads {
+        bottom: 10px;
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .fullscreen-ad {
+        padding: 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .control-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      
+      .large-play-button {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      
+      .video-title-main {
+        font-size: 1.2rem;
+      }
+      
+      .video-subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .progress-display {
+        bottom: 60px;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+      }
+      
+      .loading-progress {
+        width: 250px;
+      }
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideInUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideInDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Utility Classes */
+    .fade-in {
+      animation: fadeInOut 0.6s ease;
+    }
+
+    .slide-in-left {
+      animation: slideInLeft 0.6s ease;
+    }
+
+    .slide-in-right {
+      animation: slideInRight 0.6s ease;
+    }
+
+    .slide-in-up {
+      animation: slideInUp 0.6s ease;
+    }
+
+    .slide-in-down {
+      animation: slideInDown 0.6s ease;
+    }
+
+    /* Hidden class for UI elements */
+    .hidden {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    /* Video transition effects */
+    .video-transition {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .video-transition.switching {
+      transform: scale(0.95);
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Fullscreen Container -->
+  <div class="fullscreen-container" id="fullscreenContainer">
+    
+    <!-- Theme Toggle -->
+    <button class="theme-toggle-fullscreen" onclick="toggleTheme()" id="themeToggle">
+      🌙 Dark
+    </button>
+
+    <!-- Top Right Controls -->
+    <div class="fullscreen-controls" id="fullscreenControls">
+      <button class="control-button" onclick="exitFullscreen()" title="Exit Fullscreen" aria-label="Exit Fullscreen">
+        ✕
+      </button>
+      <button class="control-button" onclick="previousVideo()" title="Previous Video" aria-label="Previous Video">
+        ↑
+      </button>
+      <button class="control-button" onclick="nextVideo()" title="Next Video" aria-label="Next Video">
+        ↓
+      </button>
+      <button class="control-button" onclick="randomVideo()" title="Random Video" aria-label="Random Video">
+        🎲
+      </button>
+      <button class="control-button" onclick="shareVideo()" title="Share Video" aria-label="Share Video">
+        📤
+      </button>
+    </div>
+
+    <!-- Swipe Indicators -->
+    <div class="swipe-indicator" id="swipeIndicator">
+      Swipe ↕ for videos
+    </div>
+
+    <!-- Progress Display -->
+    <div class="progress-display" id="progressDisplay">
+      Video 1 of 100
+    </div>
+
+    <!-- Main Video Display Area -->
+    <div class="video-display" id="videoDisplay">
+      <div class="video-content" id="videoContent">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="loading-spinner"></div>
+          <div class="loading-text" id="loadingText">Loading video player...</div>
+          <div class="loading-progress">
+            <div class="loading-progress-fill" id="loadingProgressFill" style="width: 0%;"></div>
+          </div>
+          <div class="loading-status" id="loadingStatus">Initializing player...</div>
+          
+          <!-- Loading Ads -->
+          <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-width: 600px;">
+            <div style="background: var(--control-bg); padding: 1rem; border-radius: 1rem; backdrop-filter: blur(10px);">
+              <script type="text/javascript">
+                atOptions = {
+                  'key' : '04d176f478f7739bcbcd4263486f4bb2',
+                  'format' : 'iframe',
+                  'height' : 200,
+                  'width' : 250,
+                  'params' : {}
+                };
+              </script>
+              <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+            </div>
+            
+            <div style="background: var(--control-bg); padding: 1rem; border-radius: 1rem; backdrop-filter: blur(10px);">
+              <script type="text/javascript">
+                atOptions = {
+                  'key' : '84fb95635357c8ec40e2f84914bc10a5',
+                  'format' : 'iframe',
+                  'height' : 200,
+                  'width' : 250,
+                  'params' : {}
+                };
+              </script>
+              <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Video content will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-navigation" id="bottomNavigation">
+      <div class="navigation-content">
+        <div class="nav-section">
+          <a href="index.html" class="nav-button">
+            ← Main Player
+          </a>
+          <a href="grid-view.html" class="nav-button secondary">
+            📱 Grid View
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <button class="nav-button" onclick="toggleAutoplay()" id="autoplayButton">
+            ⏯️ Auto Play: OFF
+          </button>
+          <button class="nav-button" onclick="toggleFullscreenMode()" id="fullscreenModeButton">
+            🖥️ Theater Mode
+          </button>
+        </div>
+        
+        <div class="nav-section">
+          <button class="nav-button secondary" onclick="openVideoSettings()">
+            ⚙️ Settings
+          </button>
+          <button class="nav-button danger" onclick="reportVideo()">
+            🚨 Report
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen Ads -->
+    <div class="fullscreen-ads" id="fullscreenAds">
+      <div class="fullscreen-ad">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '84fb95635357c8ec40e2f84914bc10a5',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 200,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+      </div>
+      
+      <div class="fullscreen-ad">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '059de56bbc7afe3d490a9d7c9c68c0f9',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 200,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/059de56bbc7afe3d490a9d7c9c68c0f9/invoke.js"></script>
+      </div>
+    </div>
+
+    <!-- Swipe Hint (shown on first load) -->
+    <div class="swipe-hint" id="swipeHint" style="display: none;">
+      👆 Swipe up/down or use arrow keys to navigate videos
+    </div>
+    
+  </div>
+
+  <script>
+    // Global Variables
+    let allUrls = [];
+    let currentVideoIndex = 0;
+    let videoCache = new Map();
+    let thumbnailCache = new Map();
+    let metadataCache = new Map();
+    let isLoading = false;
+    let autoPlay = false;
+    let fullscreenMode = 'normal'; // normal, theater
+    let currentTheme = 'dark';
+    let controlsVisible = true;
+    let controlsTimeout;
+    let touchStartY = 0;
+    let touchStartX = 0;
+    let isScrolling = false;
+    let isVideoLoaded = false;
+
+    // Ready URLs for instant loading
+    const readyUrls = [
+      'https://xxnx-world.blogspot.com',
+      'https://xhamster.com/videos/my-roommate-fucks-me-hard-in-missionary-then-pull-my-hair-while-fucking-in-doggystyle-while-cuckold-works-xhXWArs',
+      'https://xhamster.com/videos/teensex66-shh-shh-quiet-come-lets-fuck-xhb4BOz',
+      'https://xhamster.com/videos/compilation-wrong-holes-with-big-cumshots-xhuv92G',
+      'https://xhamster.com/videos/step-father-seduces-skinny-teens-and-fucks-hairy-pussy-in-threesome-uncensored-xhKaSHl'
+    ];
+
+    // Theme Management
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        currentTheme = savedTheme;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        currentTheme = 'light';
+      }
+      
+      applyTheme(currentTheme);
+      updateThemeToggle();
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(currentTheme);
+      updateThemeToggle();
+      localStorage.setItem('theme', currentTheme);
+    }
+
+    function applyTheme(theme) {
+      const body = document.body;
+      if (theme === 'light') {
+        body.classList.add('light-theme');
+        body.classList.remove('dark-theme');
+      } else {
+        body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
+      }
+    }
+
+    function updateThemeToggle() {
+      const toggleBtn = document.getElementById('themeToggle');
+      if (currentTheme === 'dark') {
+        toggleBtn.innerHTML = '☀️ Light';
+      } else {
+        toggleBtn.innerHTML = '🌙 Dark';
+      }
+    }
+
+    // Disable right-click and key combinations
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+      if (e.keyCode == 123 || 
+          (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) ||
+          (e.ctrlKey && e.keyCode == 85) ||
+          (e.ctrlKey && e.keyCode == 83)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    document.onselectstart = function() { return false; };
+
+    // Progress and Status Updates
+    function updateProgress(percent, status = null) {
+      const progressFill = document.getElementById('loadingProgressFill');
+      const statusEl = document.getElementById('loadingStatus');
+      
+      if (progressFill) {
+        progressFill.style.width = percent + '%';
+      }
+      
+      if (status && statusEl) {
+        statusEl.textContent = status;
+      }
+    }
+
+    function updateLoadingText(text) {
+      const loadingText = document.getElementById('loadingText');
+      if (loadingText) {
+        loadingText.textContent = text;
+      }
+    }
+
+    function updateProgressDisplay() {
+      const progressDisplay = document.getElementById('progressDisplay');
+      if (progressDisplay) {
+        progressDisplay.textContent = `Video ${currentVideoIndex + 1} of ${allUrls.length}`;
+      }
+    }
+
+    // Navigation Functions
+    function exitFullscreen() {
+      window.location.href = 'index.html';
+    }
+
+    function nextVideo() {
+      if (currentVideoIndex < allUrls.length - 1) {
+        currentVideoIndex++;
+        loadCurrentVideo();
+        updateProgressDisplay();
+      }
+    }
+
+    function previousVideo() {
+      if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        loadCurrentVideo();
+        updateProgressDisplay();
+      }
+    }
+
+    function randomVideo() {
+      const newIndex = Math.floor(Math.random() * allUrls.length);
+      if (newIndex !== currentVideoIndex) {
+        currentVideoIndex = newIndex;
+        loadCurrentVideo();
+        updateProgressDisplay();
+      }
+    }
+
+    function shareVideo() {
+      const currentUrl = allUrls[currentVideoIndex];
+      if (navigator.share) {
+        navigator.share({
+          title: 'Smart Video Player Pro - Awesome Video',
+          text: 'Check out this amazing video!',
+          url: currentUrl
+        }).catch(err => console.log('Error sharing:', err));
+      } else {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(currentUrl).then(() => {
+          showNotification('Video link copied to clipboard!');
+        }).catch(err => {
+          console.log('Error copying to clipboard:', err);
+        });
+      }
+    }
+
+    // Player Controls
+    function toggleAutoplay() {
+      autoPlay = !autoPlay;
+      const button = document.getElementById('autoplayButton');
+      button.textContent = `⏯️ Auto Play: ${autoPlay ? 'ON' : 'OFF'}`;
+      
+      if (autoPlay) {
+        button.classList.add('secondary');
+      } else {
+        button.classList.remove('secondary');
+      }
+      
+      localStorage.setItem('autoPlay', autoPlay);
+    }
+
+    function toggleFullscreenMode() {
+      fullscreenMode = fullscreenMode === 'normal' ? 'theater' : 'normal';
+      const button = document.getElementById('fullscreenModeButton');
+      
+      if (fullscreenMode === 'theater') {
+        button.textContent = '🖥️ Normal Mode';
+        button.classList.add('secondary');
+        // Add theater mode styling
+        document.body.style.background = '#111';
+      } else {
+        button.textContent = '🖥️ Theater Mode';
+        button.classList.remove('secondary');
+        // Remove theater mode styling
+        document.body.style.background = '';
+      }
+      
+      localStorage.setItem('fullscreenMode', fullscreenMode);
+    }
+
+    function openVideoSettings() {
+      showCustomModal('Video Settings', `
+        <div style="text-align: left; padding: 1rem;">
+          <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Playback Settings</h4>
+          <label style="display: block; margin-bottom: 0.5rem;">
+            <input type="checkbox" ${autoPlay ? 'checked' : ''}> Auto Play Next Video
+          </label>
+          <label style="display: block; margin-bottom: 0.5rem;">
+            <input type="checkbox" checked> Show Controls
+          </label>
+          <label style="display: block; margin-bottom: 1rem;">
+            <input type="checkbox" checked> Enable Keyboard Shortcuts
+          </label>
+          
+          <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Display Settings</h4>
+          <label style="display: block; margin-bottom: 0.5rem;">
+            Quality: 
+            <select style="margin-left: 0.5rem; padding: 0.3rem;">
+              <option>Auto</option>
+              <option>1080p</option>
+              <option>720p</option>
+              <option>480p</option>
+            </select>
+          </label>
+        </div>
+      `);
+    }
+
+    function reportVideo() {
+      showCustomModal('Report Video', `
+        <div style="text-align: left; padding: 1rem;">
+          <p style="margin-bottom: 1rem;">Please select a reason for reporting this video:</p>
+          <label style="display: block; margin-bottom: 0.5rem;">
+            <input type="radio" name="report" value="inappropriate"> Inappropriate Content
+          </label>
+          <label style="display: block; margin-bottom: 0.5rem;">
+            <input type="radio" name="report" value="copyright"> Copyright Violation
+          </label>
+          <label style="display: block; margin-bottom: 0.5rem;">
+            <input type="radio" name="report" value="spam"> Spam or Misleading
+          </label>
+          <label style="display: block; margin-bottom: 1rem;">
+            <input type="radio" name="report" value="other"> Other Issue
+          </label>
+          <textarea placeholder="Additional details (optional)" style="width: 100%; height: 80px; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #ccc;"></textarea>
+        </div>
+      `);
+    }
+
+    // UI Control Functions
+    function showControls() {
+      const controls = document.getElementById('fullscreenControls');
+      const navigation = document.getElementById('bottomNavigation');
+      const themeToggle = document.getElementById('themeToggle');
+      const progressDisplay = document.getElementById('progressDisplay');
+      const ads = document.getElementById('fullscreenAds');
+      
+      controls.classList.add('visible');
+      navigation.classList.add('visible');
+      themeToggle.classList.add('visible');
+      progressDisplay.classList.add('visible');
+      ads.classList.add('visible');
+      
+      controlsVisible = true;
+      
+      // Auto-hide controls after 5 seconds
+      clearTimeout(controlsTimeout);
+      controlsTimeout = setTimeout(hideControls, 5000);
+    }
+
+    function hideControls() {
+      if (!isVideoLoaded) return; // Keep controls visible while loading
+      
+      const controls = document.getElementById('fullscreenControls');
+      const navigation = document.getElementById('bottomNavigation');
+      const themeToggle = document.getElementById('themeToggle');
+      const progressDisplay = document.getElementById('progressDisplay');
+      const ads = document.getElementById('fullscreenAds');
+      
+      controls.classList.remove('visible');
+      navigation.classList.remove('visible');
+      themeToggle.classList.remove('visible');
+      progressDisplay.classList.remove('visible');
+      ads.classList.remove('visible');
+      
+      controlsVisible = false;
+    }
+
+    function toggleControls() {
+      if (controlsVisible) {
+        hideControls();
+      } else {
+        showControls();
+      }
+    }
+
+    // Touch and Gesture Handling
+    function initializeTouchHandlers() {
+      const container = document.getElementById('fullscreenContainer');
+      
+      // Touch events for swipe navigation
+      container.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+        isScrolling = false;
+      });
+      
+      container.addEventListener('touchmove', (e) => {
+        if (isScrolling) return;
+        
+        const touchY = e.touches[0].clientY;
+        const touchX = e.touches[0].clientX;
+        const diffY = touchStartY - touchY;
+        const diffX = Math.abs(touchStartX - touchX);
+        
+        // Only process vertical swipes
+        if (Math.abs(diffY) > 50 && diffX < 100) {
+          e.preventDefault();
+          isScrolling = true;
+          
+          if (diffY > 0) {
+            nextVideo(); // Swipe up for next
+          } else {
+            previousVideo(); // Swipe down for previous
+          }
+          
+          setTimeout(() => { isScrolling = false; }, 500);
+        }
+      });
+      
+      // Click/tap to toggle controls
+      container.addEventListener('click', (e) => {
+        // Don't toggle if clicking on a control element
+        if (e.target.closest('.control-button, .nav-button, .theme-toggle-fullscreen')) {
+          return;
+        }
+        
+        toggleControls();
+      });
+      
+      // Mouse wheel support
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (e.deltaY > 0) {
+          nextVideo();
+        } else {
+          previousVideo();
+        }
+      });
+    }
+
+    // Keyboard Shortcuts
+    function initializeKeyboardHandlers() {
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case 'ArrowUp':
+            e.preventDefault();
+            previousVideo();
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            nextVideo();
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            previousVideo();
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            nextVideo();
+            break;
+          case ' ': // Spacebar
+            e.preventDefault();
+            toggleVideoPlayback();
+            break;
+          case 'Escape':
+            exitFullscreen();
+            break;
+          case 'r':
+          case 'R':
+            randomVideo();
+            break;
+          case 'c':
+          case 'C':
+            toggleControls();
+            break;
+          case 's':
+          case 'S':
+            shareVideo();
+            break;
+        }
+      });
+    }
+
+    function toggleVideoPlayback() {
+      const video = document.querySelector('.fullscreen-video');
+      if (video) {
+        if (video.paused) {
+          video.play().catch(e => console.log('Play failed:', e));
+        } else {
+          video.pause();
+        }
+      }
+    }
+
+    // Video Loading and Display
+    async function loadCurrentVideo() {
+      if (isLoading || currentVideoIndex >= allUrls.length) return;
+      
+      isLoading = true;
+      isVideoLoaded = false;
+      
+      const currentUrl = allUrls[currentVideoIndex];
+      const videoContent = document.getElementById('videoContent');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      
+      // Show loading overlay
+      loadingOverlay.style.display = 'flex';
+      updateLoadingText('Loading video...');
+      updateProgress(0, 'Initializing...');
+      
+      // Show controls during loading
+      showControls();
+      
+      try {
+        // Check cache first
+        const cacheKey = `video_${currentUrl}`;
+        if (videoCache.has(cacheKey)) {
+          updateProgress(50, 'Loading from cache...');
+          const cachedData = videoCache.get(cacheKey);
+          displayVideo(cachedData);
+          updateProgress(100, 'Ready to play');
+        } else {
+          updateProgress(25, 'Processing video URL...');
+          const videoData = await processVideoUrl(currentUrl);
+          
+          if (videoData) {
+            videoCache.set(cacheKey, videoData);
+            displayVideo(videoData);
+            updateProgress(100, 'Ready to play');
+          } else {
+            showError('Failed to load video', 'The video could not be loaded. Please try the next video.');
+          }
+        }
+        
+      } catch (err) {
+        console.error('Video loading error:', err);
+        showError('Loading Error', err.message || 'An unexpected error occurred while loading the video.');
+      } finally {
+        isLoading = false;
+        
+        // Hide loading overlay after a brief delay
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+          isVideoLoaded = true;
+          
+          // Auto-hide controls after video loads (unless hovered)
+          setTimeout(() => {
+            if (!document.querySelector('.fullscreen-container:hover')) {
+              hideControls();
+            }
+          }, 3000);
+        }, 1000);
+      }
+    }
+
+    function displayVideo(videoData) {
+      const videoContent = document.getElementById('videoContent');
+      const domain = extractDomain(videoData.pageUrl);
+      const title = videoData.metadata?.title || `Video from ${domain}`;
+      
+      let videoHTML = '';
+      
+      if (videoData.thumbnail && !videoData.videoUrl) {
+        // Show thumbnail with play button
+        videoHTML = `
+          <div class="video-thumbnail-display">
+            <img src="${videoData.thumbnail}" alt="${title}" class="preview-thumbnail">
+            <div class="thumbnail-overlay">
+              <div class="large-play-button" onclick="playVideoFromThumbnail('${videoData.pageUrl}')">▶</div>
+              <div class="video-title-overlay">
+                <div class="video-title-main">${title}</div>
+                <div class="video-subtitle">Click to play • ${domain}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (videoData.videoUrl) {
+        if (videoData.type === 'direct') {
+          videoHTML = `
+            <video class="fullscreen-video video-transition" controls preload="metadata" 
+                   crossorigin="anonymous" controlsList="nodownload" ${autoPlay ? 'autoplay' : ''}>
+              <source src="${videoData.videoUrl}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          `;
+        } else if (videoData.type === 'embed') {
+          videoHTML = `
+            <iframe class="fullscreen-iframe video-transition" 
+                    src="${videoData.videoUrl}" 
+                    frameborder="0" 
+                    allow="autoplay; fullscreen; picture-in-picture" 
+                    allowfullscreen 
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms">
+            </iframe>
+          `;
+        } else {
+          videoHTML = `
+            <iframe class="fullscreen-iframe video-transition" 
+                    src="${videoData.pageUrl}" 
+                    frameborder="0" 
+                    allowfullscreen 
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                    referrerpolicy="no-referrer">
+            </iframe>
+          `;
+        }
+      } else {
+        // Fallback to iframe
+        videoHTML = `
+          <iframe class="fullscreen-iframe video-transition" 
+                  src="${videoData.pageUrl}" 
+                  frameborder="0" 
+                  allowfullscreen 
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  referrerpolicy="no-referrer">
+          </iframe>
+        `;
+      }
+      
+      // Create a new video element with transition
+      const newVideoContainer = document.createElement('div');
+      newVideoContainer.innerHTML = videoHTML;
+      newVideoContainer.style.opacity = '0';
+      newVideoContainer.style.transform = 'scale(0.95)';
+      newVideoContainer.style.transition = 'all 0.5s ease';
+      
+      // Remove old video content
+      const existingVideo = videoContent.querySelector('.video-transition, .video-thumbnail-display');
+      if (existingVideo) {
+        existingVideo.style.opacity = '0';
+        existingVideo.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          if (existingVideo.parentNode) {
+            existingVideo.remove();
+          }
+        }, 300);
+      }
+      
+      // Add new video content
+      videoContent.appendChild(newVideoContainer);
+      
+      // Animate in new content
+      setTimeout(() => {
+        newVideoContainer.style.opacity = '1';
+        newVideoContainer.style.transform = 'scale(1)';
+      }, 100);
+      
+      // Setup video event listeners
+      const video = newVideoContainer.querySelector('video');
+      if (video) {
+        video.addEventListener('ended', () => {
+          if (autoPlay && currentVideoIndex < allUrls.length - 1) {
+            setTimeout(nextVideo, 1000);
+          }
+        });
+        
+        video.addEventListener('error', () => {
+          showError('Video Playback Error', 'This video cannot be played. Trying next video...');
+          setTimeout(nextVideo, 2000);
+        });
+      }
+    }
+
+    function playVideoFromThumbnail(url) {
+      // Try to load the actual video
+      loadCurrentVideo();
+    }
+
+    // Video Processing (simplified for fullscreen)
+    async function processVideoUrl(pageUrl) {
+      updateProgress(30, 'Extracting video data...');
+      
+      try {
+        // Try special platforms first
+        const specialData = await trySpecialPlatforms(pageUrl);
+        if (specialData) {
+          return specialData;
+        }
+        
+        updateProgress(60, 'Processing with proxy...');
+        
+        // Try proxy services
+        const proxyServices = [
+          `https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`,
+          `https://corsproxy.io/?${encodeURIComponent(pageUrl)}`
+        ];
+
+        for (const proxyUrl of proxyServices) {
+          try {
+            const response = await fetch(proxyUrl);
+            if (!response.ok) continue;
+
+            const data = await response.json();
+            const html = data.contents || data;
+            
+            const videoUrl = extractVideoFromHtml(html, pageUrl);
+            const thumbnail = extractThumbnailFromHtml(html, pageUrl);
+            const metadata = extractMetadataFromHtml(html);
+            
+            if (videoUrl) {
+              return {
+                pageUrl,
+                videoUrl,
+                thumbnail,
+                metadata,
+                type: 'direct',
+                status: 'Ready'
+              };
+            } else if (thumbnail) {
+              return {
+                pageUrl,
+                videoUrl: null,
+                thumbnail,
+                metadata,
+                type: 'thumbnail',
+                status: 'Thumbnail Only'
+              };
+            }
+            
+          } catch (err) {
+            console.warn('Proxy failed:', proxyUrl, err);
+          }
+        }
+        
+        // Fallback to direct iframe
+        return {
+          pageUrl,
+          videoUrl: pageUrl,
+          thumbnail: null,
+          metadata: { title: `Video from ${extractDomain(pageUrl)}` },
+          type: 'iframe',
+          status: 'Direct Embed'
+        };
+        
+      } catch (err) {
+        throw new Error('Failed to process video URL');
+      }
+    }
+
+    async function trySpecialPlatforms(pageUrl) {
+      const url = new URL(pageUrl);
+      
+      if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+        const videoId = extractYouTubeId(pageUrl);
+        if (videoId) {
+          const thumbnail = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+          const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=${autoPlay ? 1 : 0}&rel=0&modestbranding=1`;
+          
+          return {
+            pageUrl,
+            videoUrl: embedUrl,
+            thumbnail,
+            type: 'embed',
+            status: 'YouTube Video',
+            metadata: { title: 'YouTube Video', description: '' }
+          };
+        }
+      }
+      
+      if (url.hostname.includes('vimeo.com')) {
+        const videoId = pageUrl.match(/vimeo\.com\/(\d+)/);
+        if (videoId) {
+          const embedUrl = `https://player.vimeo.com/video/${videoId[1]}?autoplay=${autoPlay ? 1 : 0}`;
+          
+          return {
+            pageUrl,
+            videoUrl: embedUrl,
+            thumbnail: null,
+            type: 'embed',
+            status: 'Vimeo Video',
+            metadata: { title: 'Vimeo Video', description: '' }
+          };
+        }
+      }
+      
+      return null;
+    }
+
+    // Utility Functions
+    function extractDomain(url) {
+      try {
+        return new URL(url).hostname.replace('www.', '');
+      } catch (e) {
+        return url;
+      }
+    }
+
+    function extractYouTubeId(url) {
+      const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    }
+
+    function extractVideoFromHtml(html, baseUrl) {
+      const extractors = [
+        /<video[^>]*src=["']([^"'>]+)["']/gi,
+        /<source[^>]*src=["']([^"'>]+)["']/gi,
+        /<meta[^>]+property=["']og:video:url["'][^>]+content=["']([^"'>]+)["']/gi,
+        /https?:\/\/[^\s"'<>()]+\.(?:mp4|webm|ogg|m3u8)(?:\?[^\s"'<>()]*)?/gi
+      ];
+
+      for (const regex of extractors) {
+        let match;
+        while ((match = regex.exec(html)) !== null) {
+          let videoUrl = match[1] || match[0];
+          
+          if (videoUrl && !videoUrl.startsWith('http')) {
+            try {
+              videoUrl = new URL(videoUrl, baseUrl).href;
+            } catch (e) {
+              continue;
+            }
+          }
+          
+          if (videoUrl && videoUrl.startsWith('http') && !videoUrl.includes('thumbnail')) {
+            return videoUrl;
+          }
+        }
+      }
+      
+      return null;
+    }
+
+    function extractThumbnailFromHtml(html, baseUrl) {
+      const thumbnailRegexes = [
+        /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<video[^>]+poster=["']([^"'>]+)["']/gi
+      ];
+
+      for (const regex of thumbnailRegexes) {
+        const match = regex.exec(html);
+        if (match && match[1]) {
+          let thumbnailUrl = match[1];
+          
+          if (!thumbnailUrl.startsWith('http')) {
+            try {
+              thumbnailUrl = new URL(thumbnailUrl, baseUrl).href;
+            } catch (e) {
+              continue;
+            }
+          }
+          
+          if (!thumbnailUrl.includes('logo') && !thumbnailUrl.includes('avatar')) {
+            return thumbnailUrl;
+          }
+        }
+      }
+      
+      return null;
+    }
+
+    function extractMetadataFromHtml(html) {
+      try {
+        const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+        const descMatch = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"'>]+)["']/i);
+        
+        return {
+          title: titleMatch ? titleMatch[1].substring(0, 100) : 'Video Content',
+          description: descMatch ? descMatch[1].substring(0, 200) : ''
+        };
+      } catch (e) {
+        return { title: 'Video Content', description: '' };
+      }
+    }
+
+    // Error Handling
+    function showError(title, message) {
+      const videoContent = document.getElementById('videoContent');
+      
+      videoContent.innerHTML = `
+        <div class="error-display">
+          <div class="error-icon">⚠️</div>
+          <div class="error-title">${title}</div>
+          <div class="error-message">${message}</div>
+          <div class="error-actions">
+            <button class="nav-button" onclick="nextVideo()">Next Video</button>
+            <button class="nav-button secondary" onclick="randomVideo()">Random Video</button>
+            <button class="nav-button danger" onclick="exitFullscreen()">Exit Player</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Notification System
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--control-bg);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        z-index: 2000;
+        animation: fadeInOut 3s ease-in-out forwards;
+        backdrop-filter: blur(10px);
+        border: 2px solid var(--control-border);
+      `;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 3000);
+    }
+
+    // Custom Modal System
+    function showCustomModal(title, content) {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        backdrop-filter: blur(10px);
+      `;
+      
+      modal.innerHTML = `
+        <div style="background: var(--control-bg); border: 2px solid var(--control-border); border-radius: 1rem; max-width: 90vw; max-height: 90vh; overflow: auto;">
+          <div style="padding: 1.5rem; border-bottom: 1px solid var(--control-border);">
+            <h3 style="color: white; margin: 0;">${title}</h3>
+          </div>
+          <div style="color: white;">
+            ${content}
+          </div>
+          <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--control-border); text-align: right;">
+            <button class="nav-button" onclick="this.closest('.fixed').remove()">Close</button>
+          </div>
+        </div>
+      `;
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+      
+      document.body.appendChild(modal);
+    }
+
+    // Load saved preferences
+    function loadPreferences() {
+      const savedAutoPlay = localStorage.getItem('autoPlay');
+      const savedFullscreenMode = localStorage.getItem('fullscreenMode');
+      
+      if (savedAutoPlay !== null) {
+        autoPlay = savedAutoPlay === 'true';
+        toggleAutoplay(); // This will update the UI
+        toggleAutoplay(); // Toggle back to correct state
+      }
+      
+      if (savedFullscreenMode) {
+        fullscreenMode = savedFullscreenMode;
+        if (fullscreenMode === 'theater') {
+          toggleFullscreenMode(); // This will update the UI
+          toggleFullscreenMode(); // Toggle back to correct state
+        }
+      }
+    }
+
+    // Main Initialization
+    (async function init() {
+      initializeTheme();
+      loadPreferences();
+      initializeTouchHandlers();
+      initializeKeyboardHandlers();
+      
+      // Start with ready URLs
+      allUrls = [...readyUrls];
+      
+      updateLoadingText('Initializing fullscreen player...');
+      updateProgress(10, 'Setting up interface...');
+      
+      // Show initial hint
+      const swipeHint = document.getElementById('swipeHint');
+      if (!localStorage.getItem('swipeHintShown')) {
+        swipeHint.style.display = 'block';
+        localStorage.setItem('swipeHintShown', 'true');
+      }
+      
+      // Load full URL list in background
+      setTimeout(async () => {
+        try {
+          updateProgress(30, 'Loading video collection...');
+          
+          const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
+          const res = await fetch(rawListURL);
+          
+          if (res.ok) {
+            const text = await res.text();
+            const newUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
+            
+            if (newUrls.length > 0) {
+              // Merge and shuffle
+              const uniqueUrls = [...new Set([...readyUrls, ...newUrls])];
+              for (let i = uniqueUrls.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [uniqueUrls[i], uniqueUrls[j]] = [uniqueUrls[j], uniqueUrls[i]];
+              }
+              
+              allUrls = uniqueUrls;
+              updateProgressDisplay();
+            }
+          }
+          
+          updateProgress(60, 'Collection loaded...');
+          
+        } catch (err) {
+          console.warn('Failed to load full URL list:', err);
+        }
+        
+        // Check if a specific video was selected
+        const selectedVideo = localStorage.getItem('selectedVideo');
+        if (selectedVideo) {
+          localStorage.removeItem('selectedVideo');
+          const index = allUrls.indexOf(selectedVideo);
+          if (index !== -1) {
+            currentVideoIndex = index;
+          }
+        }
+        
+        updateProgress(80, 'Loading first video...');
+        
+        // Load the first video
+        await loadCurrentVideo();
+        
+        updateProgress(100, 'Ready to play!');
+        updateProgressDisplay();
+        
+      }, 1000);
+      
+      // Show controls initially
+      showControls();
+      
+    })();
+
+    // Prevent back navigation
+    window.addEventListener('popstate', function(event) {
+      exitFullscreen();
+    });
+  </script>
+</body>
+</html>
