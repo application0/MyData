@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type='text/javascript' src='//pl27022518.profitableratecpm.com/c9/4a/0b/c94a0b4ed40971010199e9dd59a95e25.js'></script>
+  <script type='text/javascript' src='//pl27022539.profitableratecpm.com/99/05/75/9905753e8d9eea31d7017cc9d3c18caa.js'></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid View - Smart Video Player Pro</title>
+  <meta name="description" content="Grid view for browsing thousands of videos with enhanced thumbnails and smart filtering">
+  <meta name="keywords" content="video grid, video browser, thumbnails, video collection, smart player">
+  
+  <link rel="icon" href="https://raw.githubusercontent.com/application0/MyData/refs/heads/main/indicator_ic_mp_playing_list.png" type="image/x-icon">
+  <meta name="theme-color" content="#5D5CDE">
+  
+  <style>
+    :root {
+      --primary-color: #5D5CDE;
+      --secondary-color: #ff6b6b;
+      --accent-color: #4ecdc4;
+      --success-color: #44a08d;
+      --warning-color: #f7971e;
+      --error-color: #ee5a24;
+      --bg-light: #FFFFFF;
+      --bg-dark: #181818;
+      --text-light: #222;
+      --text-dark: #ffffff;
+      --card-bg-light: rgba(255,255,255,0.15);
+      --card-bg-dark: rgba(255,255,255,0.05);
+      --border-light: rgba(0,0,0,0.1);
+      --border-dark: rgba(255,255,255,0.2);
+      --shadow-light: rgba(0,0,0,0.1);
+      --shadow-dark: rgba(0,0,0,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: var(--text-dark);
+      overflow-x: hidden;
+      transition: all 0.3s ease;
+    }
+
+    body.light-theme {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8eaf6 100%);
+      color: var(--text-light);
+    }
+
+    .dark-theme {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: var(--text-dark);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    /* Header Styles */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--card-bg-light);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 20px var(--shadow-dark);
+    }
+
+    .light-theme .header {
+      background: var(--card-bg-light);
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: 0 4px 20px var(--shadow-light);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .header-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--secondary-color), var(--accent-color), var(--primary-color));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg-light);
+      border: 1px solid var(--border-dark);
+      color: var(--text-dark);
+      border-radius: 50px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .light-theme .theme-toggle {
+      background: var(--card-bg-light);
+      color: var(--text-light);
+      border: 1px solid var(--border-light);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .back-button {
+      background: linear-gradient(135deg, var(--primary-color), #764ba2);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow-dark);
+    }
+
+    /* Search and Filter Bar */
+    .filter-bar {
+      background: var(--card-bg-light);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--border-dark);
+      padding: 1.5rem 2rem;
+      margin: 1rem 2rem;
+      border-radius: 2rem;
+      box-shadow: 0 4px 20px var(--shadow-dark);
+    }
+
+    .filter-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .search-container {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.8rem 3rem 0.8rem 1rem;
+      font-size: 16px;
+      border: none;
+      border-radius: 1rem;
+      background: var(--card-bg-dark);
+      backdrop-filter: blur(10px);
+      color: var(--text-dark);
+      border: 1px solid var(--border-dark);
+      transition: all 0.3s ease;
+    }
+
+    .light-theme .search-input {
+      background: rgba(255,255,255,0.8);
+      color: var(--text-light);
+      border: 1px solid var(--border-light);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.1);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .light-theme .search-input::placeholder {
+      color: rgba(0,0,0,0.5);
+    }
+
+    .search-button {
+      position: absolute;
+      right: 0.3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, var(--secondary-color), var(--error-color));
+      border: none;
+      color: white;
+      padding: 0.5rem 0.8rem;
+      border-radius: 0.7rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.8rem;
+    }
+
+    .view-toggle {
+      display: flex;
+      background: var(--card-bg-dark);
+      border-radius: 1rem;
+      padding: 0.3rem;
+      border: 1px solid var(--border-dark);
+    }
+
+    .view-toggle button {
+      background: none;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.7rem;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .view-toggle button.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .sort-select {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border-dark);
+      border-radius: 1rem;
+      background: var(--card-bg-dark);
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Fixed Grid Container - This fixes the thumbnail display issue */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Fixed Video Card - Proper thumbnail display */
+    .video-card {
+      background: var(--card-bg-light);
+      backdrop-filter: blur(15px);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      border: 1px solid var(--border-dark);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      cursor: pointer;
+      /* Fixed height to ensure proper thumbnail display */
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .light-theme .video-card {
+      background: var(--card-bg-light);
+      border: 1px solid var(--border-light);
+    }
+
+    .video-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px var(--shadow-dark);
+      border-color: var(--primary-color);
+    }
+
+    /* Fixed Thumbnail Container */
+    .thumbnail-container {
+      position: relative;
+      width: 100%;
+      height: 200px; /* Fixed height for consistent display */
+      overflow: hidden;
+      border-radius: 1.5rem 1.5rem 0 0;
+    }
+
+    /* FIXED: Proper thumbnail display - shows full image */
+    .video-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.3s ease;
+      /* Removed any constraints that were cutting off the image */
+      border-radius: 0;
+    }
+
+    .video-card:hover .video-thumbnail {
+      transform: scale(1.05);
+    }
+
+    /* Thumbnail overlay for play button and info */
+    .thumbnail-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .video-card:hover .thumbnail-overlay {
+      opacity: 1;
+    }
+
+    .play-button {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #333;
+      animation: pulse 2s ease-in-out infinite;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Video Info Section */
+    .video-info {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .video-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      color: var(--text-dark);
+    }
+
+    .light-theme .video-title {
+      color: var(--text-light);
+    }
+
+    .video-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .video-source {
+      background: var(--primary-color);
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .video-status {
+      color: var(--success-color);
+      font-weight: 600;
+    }
+
+    /* Placeholder for videos without thumbnails */
+    .thumbnail-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-color), #764ba2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .placeholder-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Loading and Status */
+    .loading-container {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--card-bg-light);
+      border-radius: 2rem;
+      margin: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-dark);
+    }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--secondary-color);
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+
+    .status-text {
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      opacity: 0.9;
+    }
+
+    .progress-container {
+      margin: 1.5rem 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--card-bg-dark);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+      border-radius: 1rem;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      text-align: center;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem auto;
+      flex-wrap: wrap;
+      padding: 0 2rem;
+    }
+
+    .pagination button {
+      background: linear-gradient(135deg, var(--primary-color), #764ba2);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px var(--shadow-dark);
+    }
+
+    .pagination button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow-dark);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .pagination .current-page {
+      background: linear-gradient(135deg, var(--secondary-color), var(--error-color));
+      font-size: 1rem;
+      padding: 0.8rem 2rem;
+    }
+
+    /* Ad Containers */
+    .ad-container {
+      text-align: center;
+      margin: 1.5rem auto;
+      padding: 1rem;
+      background: var(--card-bg-light);
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-dark);
+      max-width: 1200px;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1rem 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      background: var(--card-bg-light);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-dark);
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-top: 0.2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.2rem;
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .filter-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .header-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .video-card {
+        height: 250px;
+      }
+      
+      .thumbnail-container {
+        height: 170px;
+      }
+      
+      .stats-bar {
+        gap: 1rem;
+        margin: 1rem;
+      }
+      
+      .pagination {
+        gap: 0.5rem;
+        padding: 0 1rem;
+      }
+      
+      .pagination button {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .video-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0.5rem;
+      }
+      
+      .video-card {
+        height: 220px;
+      }
+      
+      .thumbnail-container {
+        height: 140px;
+      }
+      
+      .filter-bar {
+        margin: 0.5rem;
+        padding: 1rem;
+      }
+      
+      .search-input {
+        font-size: 16px;
+      }
+    }
+
+    /* Animation Classes */
+    .fade-in {
+      animation: fadeIn 0.6s ease;
+    }
+
+    .slide-up {
+      animation: slideUp 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Error States */
+    .error-card {
+      background: linear-gradient(135deg, var(--error-color), #c0392b);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 2rem;
+      font-size: 1.1rem;
+      box-shadow: 0 10px 25px rgba(238,85,36,0.3);
+      margin: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      opacity: 0.8;
+    }
+
+    .empty-state .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state .description {
+      font-size: 1rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1 class="header-title">📱 Grid View</h1>
+      <div class="header-controls">
+        <a href="index.html" class="back-button">
+          ← Back to Player
+        </a>
+        <a href="fullscreen-player.html" class="back-button">
+          🎬 Fullscreen
+        </a>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+          🌙 Dark
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filter and Search Bar -->
+  <div class="filter-bar">
+    <div class="filter-content">
+      <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" 
+               placeholder="🔍 Search videos by title, domain, or keywords..." 
+               oninput="handleSearch(event)">
+        <button class="search-button" onclick="performSearch()">
+          Search
+        </button>
+      </div>
+      
+      <div class="view-toggle">
+        <button class="active" onclick="setGridSize('normal')">Normal</button>
+        <button onclick="setGridSize('compact')">Compact</button>
+        <button onclick="setGridSize('large')">Large</button>
+      </div>
+      
+      <select class="sort-select" id="sortSelect" onchange="handleSort()">
+        <option value="default">Default Order</option>
+        <option value="title">Sort by Title</option>
+        <option value="domain">Sort by Domain</option>
+        <option value="random">Random Order</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-number" id="totalVideos">0</span>
+      <span class="stat-label">Total Videos</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" id="filteredVideos">0</span>
+      <span class="stat-label">Filtered</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" id="cachedVideos">0</span>
+      <span class="stat-label">Cached</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" id="currentPage">1</span>
+      <span class="stat-label">Current Page</span>
+    </div>
+  </div>
+
+  <!-- Top Ad -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : 'c4810f25a920955af5c914a3779d9d61',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/c4810f25a920955af5c914a3779d9d61/invoke.js"></script>
+  </div>
+
+  <!-- Loading Container -->
+  <div class="loading-container fade-in" id="loading">
+    <div class="spinner"></div>
+    <div class="status-text" id="loadingText">Loading video collection...</div>
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div id="progressBar" class="progress-fill" style="width: 0%;"></div>
+      </div>
+      <div id="progressText" class="progress-text">0% Complete</div>
+    </div>
+    
+    <!-- Loading Ads -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 2rem;">
+      <div style="background: var(--card-bg-dark); padding: 1rem; border-radius: 1rem;">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '04d176f478f7739bcbcd4263486f4bb2',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+      </div>
+      
+      <div style="background: var(--card-bg-dark); padding: 1rem; border-radius: 1rem;">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '84fb95635357c8ec40e2f84914bc10a5',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Grid Container -->
+  <main id="videoGrid" style="display: none;">
+    <div class="video-grid" id="videoGridContainer">
+      <!-- Video cards will be inserted here -->
+    </div>
+  </main>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState" style="display: none;">
+    <div class="icon">📹</div>
+    <div class="title">No videos found</div>
+    <div class="description">Try adjusting your search criteria or filters</div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" id="pagination" style="display: none;">
+    <!-- Pagination controls will be inserted here -->
+  </div>
+
+  <!-- Middle Ad -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '84fb95635357c8ec40e2f84914bc10a5',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+  </div>
+
+  <!-- Bottom Ad -->
+  <div class="ad-container">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '059de56bbc7afe3d490a9d7c9c68c0f9',
+        'format' : 'iframe',
+        'height' : 300,
+        'width' : 250,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/059de56bbc7afe3d490a9d7c9c68c0f9/invoke.js"></script>
+  </div>
+
+  <script>
+    // Global Variables
+    let allUrls = [];
+    let filteredUrls = [];
+    let displayedUrls = [];
+    let currentPage = 0;
+    let videosPerPage = 20;
+    let videoCache = new Map();
+    let thumbnailCache = new Map();
+    let metadataCache = new Map();
+    let isLoading = false;
+    let searchTerm = '';
+    let sortOrder = 'default';
+    let gridSize = 'normal';
+    let currentTheme = 'dark';
+
+    // Ready URLs for instant loading
+    const readyUrls = [
+      'https://xxnx-world.blogspot.com',
+      'https://xhamster.com/videos/my-roommate-fucks-me-hard-in-missionary-then-pull-my-hair-while-fucking-in-doggystyle-while-cuckold-works-xhXWArs',
+      'https://xhamster.com/videos/teensex66-shh-shh-quiet-come-lets-fuck-xhb4BOz',
+      'https://xhamster.com/videos/compilation-wrong-holes-with-big-cumshots-xhuv92G',
+      'https://xhamster.com/videos/step-father-seduces-skinny-teens-and-fucks-hairy-pussy-in-threesome-uncensored-xhKaSHl'
+    ];
+
+    // Theme Management
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        currentTheme = savedTheme;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        currentTheme = 'light';
+      }
+      
+      applyTheme(currentTheme);
+      updateThemeToggle();
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(currentTheme);
+      updateThemeToggle();
+      localStorage.setItem('theme', currentTheme);
+    }
+
+    function applyTheme(theme) {
+      const body = document.body;
+      if (theme === 'light') {
+        body.classList.add('light-theme');
+        body.classList.remove('dark-theme');
+      } else {
+        body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
+      }
+    }
+
+    function updateThemeToggle() {
+      const toggleBtn = document.getElementById('themeToggle');
+      if (currentTheme === 'dark') {
+        toggleBtn.innerHTML = '☀️ Light';
+      } else {
+        toggleBtn.innerHTML = '🌙 Dark';
+      }
+    }
+
+    // Disable right-click and key combinations
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+      if (e.keyCode == 123 || 
+          (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) ||
+          (e.ctrlKey && e.keyCode == 85) ||
+          (e.ctrlKey && e.keyCode == 83)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    document.onselectstart = function() { return false; };
+
+    // Create particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Update stats
+    function updateStats() {
+      document.getElementById('totalVideos').textContent = allUrls.length;
+      document.getElementById('filteredVideos').textContent = filteredUrls.length || allUrls.length;
+      document.getElementById('cachedVideos').textContent = videoCache.size;
+      document.getElementById('currentPage').textContent = currentPage + 1;
+    }
+
+    // Update progress
+    function updateProgress(percent, text = null) {
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      
+      if (progressBar) {
+        progressBar.style.width = percent + '%';
+      }
+      
+      if (progressText) {
+        progressText.textContent = text || `${Math.round(percent)}% Complete`;
+      }
+    }
+
+    // Update loading text
+    function updateLoadingText(text) {
+      document.getElementById('loadingText').textContent = text;
+    }
+
+    // Search Functions
+    function handleSearch(event) {
+      clearTimeout(window.searchTimeout);
+      window.searchTimeout = setTimeout(() => {
+        performSearch();
+      }, 500);
+    }
+
+    function performSearch() {
+      const input = document.getElementById('searchInput');
+      searchTerm = input.value.toLowerCase().trim();
+      
+      if (searchTerm === '') {
+        filteredUrls = [];
+        displayedUrls = allUrls;
+      } else {
+        filteredUrls = allUrls.filter(url => {
+          try {
+            const domain = new URL(url).hostname;
+            return domain.toLowerCase().includes(searchTerm) || 
+                   url.toLowerCase().includes(searchTerm);
+          } catch (e) {
+            return url.toLowerCase().includes(searchTerm);
+          }
+        });
+        displayedUrls = filteredUrls;
+      }
+      
+      applySorting();
+      currentPage = 0;
+      renderVideoGrid();
+      updateStats();
+    }
+
+    // Sorting Functions
+    function handleSort() {
+      const select = document.getElementById('sortSelect');
+      sortOrder = select.value;
+      applySorting();
+      currentPage = 0;
+      renderVideoGrid();
+    }
+
+    function applySorting() {
+      const urls = displayedUrls.slice();
+      
+      switch (sortOrder) {
+        case 'title':
+          urls.sort((a, b) => {
+            const titleA = extractDomain(a);
+            const titleB = extractDomain(b);
+            return titleA.localeCompare(titleB);
+          });
+          break;
+        case 'domain':
+          urls.sort((a, b) => {
+            const domainA = extractDomain(a);
+            const domainB = extractDomain(b);
+            return domainA.localeCompare(domainB);
+          });
+          break;
+        case 'random':
+          for (let i = urls.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [urls[i], urls[j]] = [urls[j], urls[i]];
+          }
+          break;
+        default:
+          // Keep original order
+          break;
+      }
+      
+      displayedUrls = urls;
+    }
+
+    function extractDomain(url) {
+      try {
+        return new URL(url).hostname.replace('www.', '');
+      } catch (e) {
+        return url;
+      }
+    }
+
+    // Grid Size Functions
+    function setGridSize(size) {
+      gridSize = size;
+      
+      // Update active button
+      document.querySelectorAll('.view-toggle button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update grid CSS
+      const grid = document.getElementById('videoGridContainer');
+      const cards = document.querySelectorAll('.video-card');
+      
+      switch (size) {
+        case 'compact':
+          grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))';
+          cards.forEach(card => {
+            card.style.height = '200px';
+            const thumbnail = card.querySelector('.thumbnail-container');
+            if (thumbnail) thumbnail.style.height = '120px';
+          });
+          videosPerPage = 40;
+          break;
+        case 'large':
+          grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(400px, 1fr))';
+          cards.forEach(card => {
+            card.style.height = '350px';
+            const thumbnail = card.querySelector('.thumbnail-container');
+            if (thumbnail) thumbnail.style.height = '250px';
+          });
+          videosPerPage = 12;
+          break;
+        default: // normal
+          grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(320px, 1fr))';
+          cards.forEach(card => {
+            card.style.height = '280px';
+            const thumbnail = card.querySelector('.thumbnail-container');
+            if (thumbnail) thumbnail.style.height = '200px';
+          });
+          videosPerPage = 20;
+          break;
+      }
+      
+      renderVideoGrid();
+    }
+
+    // Video Card Creation - FIXED thumbnail display
+    function createVideoCard(url, index) {
+      const card = document.createElement('div');
+      card.className = 'video-card slide-up';
+      card.style.animationDelay = `${(index % 20) * 0.05}s`;
+      
+      const domain = extractDomain(url);
+      const title = generateTitle(url);
+      const cacheKey = `video_${url}`;
+      const thumbnail = thumbnailCache.get(url);
+      const status = videoCache.has(cacheKey) ? 'Cached' : 'Ready';
+      
+      card.innerHTML = `
+        <div class="thumbnail-container">
+          ${thumbnail ? `
+            <img src="${thumbnail}" alt="${title}" class="video-thumbnail" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="thumbnail-placeholder" style="display: none;">
+              <div class="placeholder-icon">🎥</div>
+              <div style="font-size: 0.9rem; font-weight: 600;">${domain}</div>
+            </div>
+          ` : `
+            <div class="thumbnail-placeholder">
+              <div class="placeholder-icon">🎥</div>
+              <div style="font-size: 0.9rem; font-weight: 600;">${domain}</div>
+            </div>
+          `}
+          <div class="thumbnail-overlay">
+            <div class="play-button">▶</div>
+            <div style="color: white; font-weight: 600; text-align: center; font-size: 0.8rem;">
+              Click to Play
+            </div>
+          </div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">${title}</div>
+          <div class="video-meta">
+            <div class="video-source">${domain}</div>
+            <div class="video-status">● ${status}</div>
+          </div>
+        </div>
+      `;
+      
+      // Add click handler
+      card.addEventListener('click', () => {
+        playVideo(url);
+      });
+      
+      return card;
+    }
+
+    function generateTitle(url) {
+      try {
+        const domain = extractDomain(url);
+        const pathname = new URL(url).pathname;
+        
+        // Extract meaningful title from URL
+        if (pathname.includes('videos/')) {
+          const parts = pathname.split('videos/')[1];
+          if (parts) {
+            return parts.split('/')[0]
+              .replace(/-/g, ' ')
+              .replace(/[^a-zA-Z0-9\s]/g, '')
+              .substring(0, 50)
+              .trim() || `Video from ${domain}`;
+          }
+        }
+        
+        return `Video from ${domain}`;
+      } catch (e) {
+        return 'Video Content';
+      }
+    }
+
+    function playVideo(url) {
+      // Store the selected video URL and redirect to main player
+      localStorage.setItem('selectedVideo', url);
+      window.location.href = 'index.html';
+    }
+
+    // Render Video Grid
+    function renderVideoGrid() {
+      const container = document.getElementById('videoGridContainer');
+      const loading = document.getElementById('loading');
+      const videoGrid = document.getElementById('videoGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      const startIndex = currentPage * videosPerPage;
+      const endIndex = startIndex + videosPerPage;
+      const pageUrls = displayedUrls.slice(startIndex, endIndex);
+      
+      if (pageUrls.length === 0) {
+        loading.style.display = 'none';
+        videoGrid.style.display = 'none';
+        emptyState.style.display = 'block';
+        document.getElementById('pagination').style.display = 'none';
+        return;
+      }
+      
+      container.innerHTML = '';
+      
+      pageUrls.forEach((url, index) => {
+        const card = createVideoCard(url, index);
+        container.appendChild(card);
+      });
+      
+      loading.style.display = 'none';
+      emptyState.style.display = 'none';
+      videoGrid.style.display = 'block';
+      
+      createPagination();
+      updateStats();
+    }
+
+    // Pagination
+    function createPagination() {
+      const paginationEl = document.getElementById('pagination');
+      const totalPages = Math.ceil(displayedUrls.length / videosPerPage);
+      
+      if (totalPages <= 1) {
+        paginationEl.style.display = 'none';
+        return;
+      }
+      
+      paginationEl.innerHTML = `
+        <button onclick="changePage(${Math.max(0, currentPage - 1)})" ${currentPage === 0 ? 'disabled' : ''}>
+          ← Previous
+        </button>
+        <button class="current-page">
+          Page ${currentPage + 1} of ${totalPages}
+          <br><small>${videosPerPage} videos per page</small>
+        </button>
+        <button onclick="changePage(${Math.min(totalPages - 1, currentPage + 1)})" ${currentPage === totalPages - 1 ? 'disabled' : ''}>
+          Next →
+        </button>
+        <button onclick="changePage(${Math.floor(Math.random() * totalPages)})">
+          🎲 Random
+        </button>
+      `;
+      
+      paginationEl.style.display = 'flex';
+    }
+
+    function changePage(newPage) {
+      const totalPages = Math.ceil(displayedUrls.length / videosPerPage);
+      if (newPage >= 0 && newPage < totalPages && newPage !== currentPage) {
+        currentPage = newPage;
+        renderVideoGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Enhanced video processing for thumbnails
+    async function processVideosForThumbnails(urls) {
+      updateLoadingText('Extracting video thumbnails...');
+      
+      for (let i = 0; i < urls.length; i++) {
+        if (thumbnailCache.has(urls[i])) continue;
+        
+        try {
+          updateProgress((i / urls.length) * 100, `Processing ${i + 1}/${urls.length} thumbnails`);
+          
+          const thumbnail = await extractThumbnailFromUrl(urls[i]);
+          if (thumbnail) {
+            thumbnailCache.set(urls[i], thumbnail);
+          }
+          
+          // Small delay to prevent overwhelming the server
+          if (i % 5 === 0) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+          }
+          
+        } catch (err) {
+          console.warn('Thumbnail extraction failed for:', urls[i]);
+        }
+      }
+      
+      updateProgress(100, 'Thumbnails processed');
+    }
+
+    async function extractThumbnailFromUrl(url) {
+      try {
+        // Try different proxy services
+        const proxyServices = [
+          `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+          `https://corsproxy.io/?${encodeURIComponent(url)}`
+        ];
+
+        for (const proxyUrl of proxyServices) {
+          try {
+            const response = await fetch(proxyUrl);
+            if (!response.ok) continue;
+
+            const data = await response.json();
+            const html = data.contents || data;
+            
+            const thumbnail = extractThumbnailFromHtml(html, url);
+            if (thumbnail) return thumbnail;
+            
+          } catch (err) {
+            console.warn('Proxy failed:', proxyUrl);
+          }
+        }
+        
+        return null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function extractThumbnailFromHtml(html, baseUrl) {
+      const thumbnailRegexes = [
+        /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<meta[^>]+property=["']og:video:thumbnail["'][^>]+content=["']([^"'>]+)["']/gi,
+        /<video[^>]+poster=["']([^"'>]+)["']/gi,
+        /"thumbnail":\s*"([^"]+)"/gi,
+        /"poster":\s*"([^"]+)"/gi
+      ];
+
+      for (const regex of thumbnailRegexes) {
+        const match = regex.exec(html);
+        if (match && match[1]) {
+          let thumbnailUrl = match[1];
+          
+          if (!thumbnailUrl.startsWith('http')) {
+            try {
+              thumbnailUrl = new URL(thumbnailUrl, baseUrl).href;
+            } catch (e) {
+              continue;
+            }
+          }
+          
+          // Skip logos and watermarks
+          if (thumbnailUrl.includes('logo') || thumbnailUrl.includes('watermark') || 
+              thumbnailUrl.includes('avatar') || thumbnailUrl.includes('icon')) {
+            continue;
+          }
+          
+          return thumbnailUrl;
+        }
+      }
+      
+      return null;
+    }
+
+    // Main initialization
+    (async function init() {
+      initializeTheme();
+      createParticles();
+      
+      // Start with ready URLs
+      allUrls = [...readyUrls];
+      displayedUrls = allUrls;
+      
+      updateLoadingText('Loading video collection...');
+      updateProgress(10, 'Initializing...');
+      
+      // Load thumbnails for ready URLs
+      await processVideosForThumbnails(readyUrls);
+      
+      updateProgress(50, 'Loading main collection...');
+      
+      try {
+        // Load full URL list
+        const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
+        const res = await fetch(rawListURL);
+        
+        if (res.ok) {
+          const text = await res.text();
+          const newUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
+          
+          if (newUrls.length > 0) {
+            // Merge and shuffle
+            const uniqueUrls = [...new Set([...readyUrls, ...newUrls])];
+            for (let i = uniqueUrls.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [uniqueUrls[i], uniqueUrls[j]] = [uniqueUrls[j], uniqueUrls[i]];
+            }
+            
+            allUrls = uniqueUrls;
+            displayedUrls = allUrls;
+            
+            updateProgress(75, 'Processing additional thumbnails...');
+            
+            // Process thumbnails for first 100 videos in background
+            const firstBatch = newUrls.slice(0, 100);
+            await processVideosForThumbnails(firstBatch);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load full URL list:', err);
+      }
+      
+      updateProgress(100, 'Complete');
+      
+      // Show the grid
+      setTimeout(() => {
+        renderVideoGrid();
+      }, 500);
+      
+      // Check if a specific video was selected from main page
+      const selectedVideo = localStorage.getItem('selectedVideo');
+      if (selectedVideo) {
+        localStorage.removeItem('selectedVideo');
+        const index = allUrls.indexOf(selectedVideo);
+        if (index !== -1) {
+          currentPage = Math.floor(index / videosPerPage);
+          renderVideoGrid();
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
