@@ -658,7 +658,7 @@
         <button class="nav-button" onclick="nextVideo()">
           Next →
         </button>
-        <a href="home.html" class="home-button" id="homeButton">
+        <a href="home.html" class="nav-button">
        📸 More Videos
         </a>
       </div>
@@ -773,7 +773,7 @@
       }
     }
     function shareVideo() {
-      const currentUrl = allUrls[currentVideoIndex];
+      const currentUrl = 'https://adultsvideos.netlify.app';
       if (navigator.share) {
         navigator.share({
           title: 'Smart Video Player Pro - Awesome Video',
