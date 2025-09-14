@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Popunder Ad -->
+  <script type='text/javascript' src='//pl27022539.revenuecpmgate.com/99/05/75/9905753e8d9eea31d7017cc9d3c18caa.js'></script>
   
-  <script type='text/javascript' src='//pl27022518.profitableratecpm.com/c9/4a/0b/c94a0b4ed40971010199e9dd59a95e25.js'></script>
-  <script type='text/javascript' src='//pl27022539.profitableratecpm.com/99/05/75/9905753e8d9eea31d7017cc9d3c18caa.js'></script>
-  <script async="async" data-cfasync="false" src="//pl27022671.profitableratecpm.com/bd33afff2b0d2055fa33924d85770ab4/invoke.js"></script>
+  <!-- Social Bar Ad -->
+  <script type='text/javascript' src='//pl27022518.revenuecpmgate.com/c9/4a/0b/c94a0b4ed40971010199e9dd59a95e25.js'></script>
+  
+  <!-- Native Banner Ad -->
+  <script async="async" data-cfasync="false" src="//pl27022671.revenuecpmgate.com/bd33afff2b0d2055fa33924d85770ab4/invoke.js"></script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fullscreen Live Player - Live Video Pro</title>
-  <meta name="description" content="Immersive fullscreen video experience with advanced controls">
-  <meta name="keywords" content="fullscreen video player, immersive experience, video streaming, mobile-friendly player">
+  <title>Live Video Platform - TikTok Style Video Experience</title>
+  <meta name="description" content="Immersive live video experience with swipe navigation and real-time comments">
+  <meta name="keywords" content="live video, swipe video, tiktok style, video streaming, live comments">
   
   <link rel="icon" href="https://raw.githubusercontent.com/application0/MyData/refs/heads/main/indicator_ic_mp_playing_list.png" type="image/x-icon">
   <meta name="theme-color" content="#000000">
@@ -23,15 +27,14 @@
       --success-color: #44a08d;
       --warning-color: #f7971e;
       --error-color: #ee5a24;
-      --bg-light: #FFFFFF;
       --bg-dark: #000000;
-      --text-light: #222;
       --text-dark: #ffffff;
-      --overlay-light: rgba(255,255,255,0.1);
       --overlay-dark: rgba(0,0,0,0.8);
       --control-bg: rgba(0,0,0,0.8);
       --control-border: rgba(255,255,255,0.2);
+      --comment-bg: rgba(0,0,0,0.9);
     }
+
     * {
       margin: 0;
       padding: 0;
@@ -41,6 +44,7 @@
       -ms-user-select: none;
       user-select: none;
     }
+
     body {
       font-family: 'Segoe UI', 'Roboto', sans-serif;
       background: var(--bg-dark);
@@ -49,23 +53,11 @@
       position: fixed;
       width: 100vw;
       height: 100vh;
+      touch-action: pan-y;
     }
-    body.light-theme {
-      background: var(--bg-light);
-      color: var(--text-light);
-    }
-    video {
-      pointer-events: auto;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-    video::-webkit-media-controls-download-button {
-      display: none;
-    }
+
     /* Main Container */
-    .fullscreen-container {
+    .video-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -73,24 +65,30 @@
       height: 100vh;
       background: var(--bg-dark);
       z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      overflow: hidden;
     }
-    .light-theme .fullscreen-container {
-      background: var(--bg-light);
-    }
-    /* Video Display Area */
-    .video-display {
+
+    /* Video Slider */
+    .video-slider {
       position: relative;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .video-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--bg-dark);
     }
+
+    /* Video Display */
     .video-content {
       position: relative;
       width: 100%;
@@ -99,250 +97,384 @@
       align-items: center;
       justify-content: center;
     }
-    /* FIXED: Proper fullscreen video display */
+
     .fullscreen-video {
       width: 100vw;
       height: 100vh;
-      object-fit: cover;
+      object-fit: contain;
       object-position: center;
       background: var(--bg-dark);
       border: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
     }
+
     .fullscreen-iframe {
       width: 100vw;
       height: 100vh;
       border: none;
       background: var(--bg-dark);
+	  pointer-events: none;
+    }
+
+    /* Landscape video handling */
+    .landscape-video {
+      object-fit: contain !important;
+      width: 100vw !important;
+      height: auto !important;
+      max-height: 100vh;
+    }
+
+    /* Skip First 5 Seconds Overlay */
+    .skip-overlay {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 1;
-    }
-    /* FIXED: Thumbnail display in preview mode */
-    .video-thumbnail-display {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%;
+      height: 100%;
       background: var(--bg-dark);
-    }
-    .preview-thumbnail {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      border-radius: 0;
-    }
-    .thumbnail-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 2;
+      z-index: 10;
+      color: white;
     }
-    .large-play-button {
-      width: 120px;
-      height: 120px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 50%;
+
+    .skip-timer {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .skip-message {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    /* Live Comments Section */
+    .comments-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50vh;
+      background: linear-gradient(transparent, var(--comment-bg));
+      z-index: 1002;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .comments-overlay.show {
+      transform: translateY(0);
+    }
+
+    .comments-header {
+      padding: 1rem;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: #333;
-      animation: pulse 2s ease-in-out infinite;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .comments-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .comments-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
       cursor: pointer;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: background 0.3s ease;
+    }
+
+    .comments-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .comments-list {
+      height: calc(50vh - 120px);
+      overflow-y: auto;
+      padding: 1rem;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .comments-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+      animation: slideInComment 0.5s ease;
+    }
+
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-name {
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-bottom: 0.2rem;
+      font-size: 0.9rem;
+    }
+
+    .comment-text {
+      color: white;
+      line-height: 1.4;
+      font-size: 0.9rem;
+    }
+
+    .comment-time {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Comment Input */
+    .comment-input-section {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      background: var(--comment-bg);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .comment-input-container {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .comment-input {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 25px;
+      padding: 0.8rem 1rem;
+      color: white;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .comment-input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .comment-send {
+      background: var(--primary-color);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
       transition: all 0.3s ease;
     }
-    .large-play-button:hover {
+
+    .comment-send:hover {
+      background: var(--accent-color);
       transform: scale(1.1);
-      background: rgba(255,255,255,1);
     }
-    .video-title-overlay {
-      text-align: center;
-      color: white;
-      padding: 0 2rem;
-    }
-    .video-title-main {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .video-subtitle {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-    /* Navigation Controls */
-    .fullscreen-controls {
+
+    /* Controls */
+    .video-controls {
       position: fixed;
       top: 20px;
       right: 20px;
       display: flex;
       flex-direction: column;
       gap: 15px;
-      z-index: 1001;
-      opacity: 1;
-      transform: translateX(0);
-      transition: all 0.3s ease;
+      z-index: 1003;
     }
+
     .control-button {
-      width: 55px;
-      height: 55px;
+      width: 50px;
+      height: 50px;
       background: var(--control-bg);
       border: 2px solid var(--control-border);
       border-radius: 50%;
       color: white;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
+
     .control-button:hover {
       background: var(--primary-color);
-      border-color: var(--primary-color);
       transform: scale(1.1);
-      box-shadow: 0 6px 25px rgba(93, 92, 222, 0.4);
     }
-    .control-button:active {
-      transform: scale(0.95);
+
+    /* Comments Toggle Button */
+    .comments-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--control-bg);
+      border: 2px solid var(--control-border);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      z-index: 1003;
     }
-    /* Home Button */
-    .home-button {
+
+    .comments-toggle:hover {
+      background: var(--accent-color);
+      transform: scale(1.1);
+    }
+
+    /* Live Indicator */
+    .live-indicator {
       position: fixed;
       top: 20px;
       left: 20px;
-      background: var(--control-bg);
-      border: 2px solid var(--control-border);
-      color: white;
-      border-radius: 50px;
-      padding: 0.8rem 1.2rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      z-index: 1001;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .home-button:hover {
-      background: var(--success-color);
-      border-color: var(--success-color);
-      transform: scale(1.05);
-    }
-    /* Bottom Navigation */
-    .bottom-navigation {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, var(--overlay-dark));
-      padding: 2rem 2rem 1rem 2rem;
-      z-index: 1001;
-      opacity: 1;
-      transform: translateY(0);
-      transition: all 0.3s ease;
-    }
-    .navigation-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    .nav-button {
-      background: var(--control-bg);
-      border: 2px solid var(--control-border);
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .nav-button:hover {
-      background: var(--primary-color);
-      border-color: var(--primary-color);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(93, 92, 222, 0.4);
-    }
-    .nav-button.secondary {
-      background: var(--control-bg);
-      border-color: var(--accent-color);
-    }
-    .nav-button.secondary:hover {
-      background: var(--accent-color);
-      border-color: var(--accent-color);
-    }
-    .nav-button.danger {
-      background: var(--control-bg);
-      border-color: var(--secondary-color);
-    }
-    .nav-button.danger:hover {
       background: var(--secondary-color);
-      border-color: var(--secondary-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      z-index: 1003;
+      animation: pulse 2s infinite;
     }
-    /* Progress and Info Display */
-    .progress-display {
+
+    /* Ad Containers */
+    .ad-container {
       position: fixed;
+      z-index: 1001;
+      background: var(--control-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid var(--control-border);
+      opacity: 0.9;
+      transition: all 0.3s ease;
+    }
+
+    .ad-container:hover {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+
+    .ad-close {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--error-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Banner Ad Positions */
+    .banner-300x250 {
+      top: 60px;
+      left: 20px;
+      width: 300px;
+      height: 250px;
+    }
+
+    .banner-728x90 {
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 728px;
+      height: 90px;
+    }
+
+    .banner-160x600 {
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 600px;
+    }
+
+    .banner-160x300 {
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 300px;
+    }
+
+    .banner-468x60 {
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 468px;
+      height: 60px;
+    }
+
+    .banner-320x50 {
       bottom: 120px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--control-bg);
-      border: 2px solid var(--control-border);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 600;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      z-index: 1001;
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      transition: all 0.3s ease;
+      width: 320px;
+      height: 50px;
     }
-    /* Loading States */
+
+    .native-banner {
+      bottom: 200px;
+      right: 20px;
+      width: 300px;
+      height: 250px;
+    }
+
+    /* Loading State */
     .loading-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: var(--overlay-dark);
+      background: var(--bg-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 10;
     }
+
     .loading-spinner {
       border: 4px solid rgba(255,255,255,0.3);
       border-radius: 50%;
@@ -352,356 +484,315 @@
       animation: spin 1s linear infinite;
       margin-bottom: 2rem;
     }
+
     .loading-text {
       color: white;
       font-size: 1.2rem;
       font-weight: 600;
-      text-align: center;
-      margin-bottom: 1rem;
     }
-    .loading-progress {
-      width: 300px;
-      height: 4px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 2rem;
-      overflow: hidden;
-      margin-bottom: 1rem;
-    }
-    .loading-progress-fill {
-      height: 100%;
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-      border-radius: 2rem;
-      transition: width 0.3s ease;
-    }
-    .loading-status {
-      color: rgba(255,255,255,0.8);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    /* Error States */
-    .error-display {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--error-color), #c0392b);
+
+    /* Swipe Indicators */
+    .swipe-indicator {
+      position: fixed;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      z-index: 10;
+      gap: 10px;
+      z-index: 1003;
     }
-    .error-icon {
-      font-size: 4rem;
-      margin-bottom: 2rem;
-      opacity: 0.8;
-    }
-    .error-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-    .error-message {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
-    .error-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    /* Single Ad Placement - Fixed to one Adsterra ad */
-    .video-ad {
-      position: fixed;
-      bottom: 120px;
-      right: 20px;
-      background: var(--control-bg);
-      backdrop-filter: blur(10px);
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-      border: 1px solid var(--control-border);
-      z-index: 1002;
-      max-width: 200px;
-      opacity: 0.8;
+
+    .swipe-dot {
+      width: 8px;
+      height: 30px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
       transition: all 0.3s ease;
     }
-    .video-ad:hover {
-      opacity: 1;
-      transform: scale(1.02);
+
+    .swipe-dot.active {
+      background: var(--primary-color);
+      transform: scale(1.2);
     }
-    /* Affiliate Link Container */
-    .affiliate-container {
-      position: fixed;
-      bottom: 200px;
-      left: 20px;
-      background: var(--control-bg);
-      backdrop-filter: blur(10px);
-      border-radius: 0.5rem;
-      padding: 0.8rem;
-      border: 1px solid var(--control-border);
-      z-index: 1002;
-      max-width: 250px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      opacity: 0.8;
-      transition: all 0.3s ease;
-    }
-    .affiliate-container:hover {
-      opacity: 1;
-      transform: scale(1.02);
-    }
-    .affiliate-image {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 0.3rem;
-      margin-bottom: 0.3rem;
-    }
-    .affiliate-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 0.3rem;
-    }
-    .affiliate-button {
-      background: linear-gradient(135deg, var(--secondary-color), #ff8e53);
-      color: white;
-      border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      font-size: 0.8rem;
-      transition: all 0.3s ease;
-    }
-    .affiliate-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(255,107,107,0.3);
-    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
-      .control-button {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1rem;
+      .banner-728x90 {
+        display: none;
       }
       
-      .large-play-button {
-        width: 100px;
-        height: 100px;
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
+      .banner-468x60 {
+        display: none;
       }
       
-      .video-title-main {
-        font-size: 1.5rem;
-      }
-      
-      .video-subtitle {
-        font-size: 0.9rem;
-      }
-      
-      .progress-display {
-        bottom: 100px;
-        padding: 0.8rem 1.5rem;
-        font-size: 0.9rem;
-      }
-      
-      .video-ad {
-        bottom: 100px;
-        max-width: 150px;
-      }
-      
-      .affiliate-container {
-        bottom: 160px;
-        max-width: 200px;
-      }
-    }
-    @media (max-width: 480px) {
-      .control-button {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-      
-      .large-play-button {
-        width: 80px;
-        height: 80px;
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-      
-      .video-title-main {
-        font-size: 1.2rem;
-      }
-      
-      .video-subtitle {
-        font-size: 0.8rem;
-      }
-      
-      .progress-display {
-        bottom: 80px;
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
-      }
-      
-      .loading-progress {
+      .banner-300x250 {
         width: 250px;
+        height: 200px;
       }
       
-      .video-ad {
-        bottom: 100px;
-        max-width: 120px;
+      .banner-160x600 {
+        display: none;
       }
       
-      .affiliate-container {
-        bottom: 140px;
-        max-width: 180px;
+      .banner-160x300 {
+        width: 140px;
+        height: 250px;
       }
     }
+
+    @media (max-width: 480px) {
+      .banner-300x250 {
+        width: 200px;
+        height: 150px;
+      }
+      
+      .banner-160x300 {
+        width: 120px;
+        height: 200px;
+      }
+      
+      .comments-overlay {
+        height: 60vh;
+      }
+      
+      .comments-list {
+        height: calc(60vh - 120px);
+      }
+    }
+
     /* Animations */
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.8; }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-      20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+
+    @keyframes slideInComment {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
-    /* Video transition effects */
-    .video-transition {
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .video-transition.switching {
-      transform: scale(0.95);
-      opacity: 0.7;
-    }
-    /* Hide scroll indicators */
-    .swipe-indicator {
-      display: none;
+
+    /* Hide elements during video load */
+    .video-hidden {
+      opacity: 0;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <!-- Main Fullscreen Container -->
-  <div class="fullscreen-container" id="fullscreenContainer">
-    
-    <!-- Home Button -->
-    <a href="home.html" class="home-button" id="homeButton">
-      🏠 Home
-    </a>
-    <!-- Top Right Controls -->
-    <div class="fullscreen-controls" id="fullscreenControls">
-      <button class="control-button" onclick="exitFullscreen()" title="Exit Fullscreen" aria-label="Exit Fullscreen">
-        ✕
-      </button>
-      <button class="control-button" onclick="previousVideo()" title="Previous Video" aria-label="Previous Video">
-        ↑
-      </button>
-      <button class="control-button" onclick="nextVideo()" title="Next Video" aria-label="Next Video">
-        ↓
-      </button>
-      <button class="control-button" onclick="randomVideo()" title="Random Video" aria-label="Random Video">
-        🎲
-      </button>
-      <button class="control-button" onclick="shareVideo()" title="Share Video" aria-label="Share Video">
-        📤
-      </button>
+  <!-- Live Indicator -->
+  <div class="live-indicator">🔴 LIVE</div>
+
+  <!-- Main Video Container -->
+  <div class="video-container" id="videoContainer">
+    <div class="video-slider" id="videoSlider">
+      <!-- Video slides will be generated here -->
     </div>
-    <!-- Progress Display -->
-    <div class="progress-display" id="progressDisplay">
-      Video 1 of 1
+  </div>
+
+  <!-- Video Controls -->
+  <div class="video-controls">
+    <button class="control-button" onclick="goHome()" title="Home">🏠</button>
+    <button class="control-button" onclick="shareVideo()" title="Share">📤</button>
+    <button class="control-button" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+  </div>
+
+  <!-- Comments Toggle Button -->
+  <button class="comments-toggle" onclick="toggleComments()" id="commentsToggle">💬</button>
+
+  <!-- Swipe Indicators -->
+  <div class="swipe-indicator" id="swipeIndicator">
+    <!-- Dots will be generated here -->
+  </div>
+
+  <!-- Comments Overlay -->
+  <div class="comments-overlay" id="commentsOverlay">
+    <div class="comments-header">
+      <div class="comments-title">Live Comments</div>
+      <button class="comments-close" onclick="toggleComments()">×</button>
     </div>
-    <!-- Main Video Display Area -->
-    <div class="video-display" id="videoDisplay">
-      <div class="video-content" id="videoContent">
-        <!-- Loading Overlay -->
-        <div class="loading-overlay" id="loadingOverlay">
-          <div class="loading-spinner"></div>
-          <div class="loading-text" id="loadingText">Loading video player...</div>
-          <div class="loading-progress">
-            <div class="loading-progress-fill" id="loadingProgressFill" style="width: 0%;"></div>
-          </div>
-          <div class="loading-status" id="loadingStatus">Initializing player...</div>
-        </div>
-        
-        <!-- Video content will be inserted here -->
+    <div class="comments-list" id="commentsList">
+      <!-- Comments will be loaded here -->
+    </div>
+    <div class="comment-input-section">
+      <div class="comment-input-container">
+        <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment..." maxlength="200">
+        <button class="comment-send" onclick="sendComment()">📤</button>
       </div>
     </div>
-    <!-- Bottom Navigation - Button Only Navigation -->
-    <div class="bottom-navigation" id="bottomNavigation">
-      <div class="navigation-content">
-        <button class="nav-button" onclick="previousVideo()">
-          ← Previous
-        </button>
-        <button class="nav-button secondary" onclick="toggleAutoplay()" id="autoplayButton">
-          ⏯️ Auto: OFF
-        </button>
-        <button class="nav-button" onclick="randomVideo()">
-          🎲 Random
-        </button>
-        <button class="nav-button" onclick="nextVideo()">
-          Next →
-        </button>
-        <a href="home.html" class="nav-button">
-       📸 More Videos
-        </a>
-      </div>
-    </div>
-    <!-- Single Adsterra Ad -->
-    <div class="video-ad" id="videoAd">
-      <script type='text/javascript'>
-        atOptions = {
-          'key' : '84fb95635357c8ec40e2f84914bc10a5',
-          'format' : 'iframe',
-          'height' : 100,
-          'width' : 180,
-          'params' : {}
-        };
-      </script>
-      <script type='text/javascript' src='//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js'></script>
-    </div>
-    
-    <!-- Affiliate Link with Image -->
-    <div class="affiliate-container" id="affiliateContainer">
-      <img src="https://picsum.photos/seed/product123/250/100.jpg" alt="Premium Video Tools" class="affiliate-image">
-      <div class="affiliate-title">Premium Video Tools & Resources</div>
-      <a href="https://www.profitableratecpm.com/xhjfmx5aty?key=52605e1088aa60e296bd2cb234e5d209" target="_blank" class="affiliate-button">
-        🎬 Get Premium Tools
-      </a>
-    </div>
+  </div>
+
+  <!-- Ad Containers -->
+  <!-- Banner 300x250 -->
+  <div class="ad-container banner-300x250" id="banner300x250">
+    <button class="ad-close" onclick="closeAd('banner300x250')">×</button>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '04d176f478f7739bcbcd4263486f4bb2',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/04d176f478f7739bcbcd4263486f4bb2/invoke.js"></script>
+  </div>
+
+  <!-- Banner 728x90 -->
+  <div class="ad-container banner-728x90" id="banner728x90">
+    <button class="ad-close" onclick="closeAd('banner728x90')">×</button>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : 'c4810f25a920955af5c914a3779d9d61',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/c4810f25a920955af5c914a3779d9d61/invoke.js"></script>
+  </div>
+
+  <!-- Banner 160x600 -->
+  <div class="ad-container banner-160x600" id="banner160x600">
+    <button class="ad-close" onclick="closeAd('banner160x600')">×</button>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '1fbbabca3c454cbef505889b7fdf86bc',
+        'format' : 'iframe',
+        'height' : 600,
+        'width' : 160,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/1fbbabca3c454cbef505889b7fdf86bc/invoke.js"></script>
+  </div>
+
+  <!-- Banner 160x300 -->
+  <div class="ad-container banner-160x300" id="banner160x300">
+    <button class="ad-close" onclick="closeAd('banner160x300')">×</button>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '059de56bbc7afe3d490a9d7c9c68c0f9',
+        'format' : 'iframe',
+        'height' : 300,
+        'width' : 160,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/059de56bbc7afe3d490a9d7c9c68c0f9/invoke.js"></script>
+  </div>
+
+  <!-- Banner 468x60 -->
+  <div class="ad-container banner-468x60" id="banner468x60">
+    <button class="ad-close" onclick="closeAd('banner468x60')">×</button>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '84fb95635357c8ec40e2f84914bc10a5',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/84fb95635357c8ec40e2f84914bc10a5/invoke.js"></script>
+  </div>
+
+  <!-- Banner 320x50 -->
+  <div class="ad-container banner-320x50" id="banner320x50">
+    <button class="ad-close" onclick="closeAd('banner320x50')">×</button>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '36f4b2bf5008f70474c95ef23c47b4d0',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/36f4b2bf5008f70474c95ef23c47b4d0/invoke.js"></script>
+  </div>
+
+  <!-- Native Banner -->
+  <div class="ad-container native-banner" id="nativeBanner">
+    <button class="ad-close" onclick="closeAd('nativeBanner')">×</button>
     <div id="container-bd33afff2b0d2055fa33924d85770ab4"></div>
   </div>
+
   <script>
     // Global Variables
     let allUrls = [];
     let currentVideoIndex = 0;
     let videoCache = new Map();
-    let thumbnailCache = new Map();
-    let metadataCache = new Map();
     let isLoading = false;
-    let autoPlay = false;
-    let isVideoLoaded = false;
-    // Ready URLs for instant loading - start with one random video
-    const readyUrls = [
-      'https://xxnx-world.blogspot.com',
+    let commentsVisible = false;
+    let comments = [];
+    let commentIndex = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+    let isSkipping = false;
+    let skipTimer = null;
+
+    // Sample comments data (will be replaced by comments.json)
+    const sampleComments = [
+      {
+        id: 1,
+        name: "Sarah Miller",
+        avatar: "https://i.pravatar.cc/40?img=1",
+        text: "Amazing video! Love this content 🔥",
+        timestamp: Date.now() - 120000
+      },
+      {
+        id: 2,
+        name: "Mike Johnson",
+        avatar: "https://i.pravatar.cc/40?img=2",
+        text: "This is so cool! How did you make this?",
+        timestamp: Date.now() - 90000
+      },
+      {
+        id: 3,
+        name: "Emma Davis",
+        avatar: "https://i.pravatar.cc/40?img=3",
+        text: "Can't stop watching! More please! 😍",
+        timestamp: Date.now() - 60000
+      },
+      {
+        id: 4,
+        name: "Alex Chen",
+        avatar: "https://i.pravatar.cc/40?img=4",
+        text: "Incredible work! Following for more 👍",
+        timestamp: Date.now() - 30000
+      },
+      {
+        id: 5,
+        name: "Lisa Wang",
+        avatar: "https://i.pravatar.cc/40?img=5",
+        text: "Best content on the platform! 🌟",
+        timestamp: Date.now() - 10000
+      }
     ];
-    // Disable right-click and key combinations
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+      setupTouchHandlers();
+      setupKeyboardHandlers();
+      loadComments();
+      startCommentAnimation();
+    });
+
+    // Disable right-click and dev tools
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', function(e) {
       if (e.keyCode == 123 || 
@@ -712,474 +803,511 @@
         return false;
       }
     });
-    document.onselectstart = function() { return false; };
-    // Progress and Status Updates
-    function updateProgress(percent, status = null) {
-      const progressFill = document.getElementById('loadingProgressFill');
-      const statusEl = document.getElementById('loadingStatus');
+
+    // Initialize App
+    async function initializeApp() {
+      try {
+        // Load video URLs
+        const response = await fetch('https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs');
+        const text = await response.text();
+        allUrls = text.split(/\r?\n/).filter(url => url.trim() && /^https?:\/\//.test(url.trim()));
+        
+        if (allUrls.length === 0) {
+          allUrls = ['https://x-world.blogspot.com']; // Fallback
+        }
+
+        // Shuffle URLs
+        shuffleArray(allUrls);
+        
+        // Create video slides
+        createVideoSlides();
+        
+        // Load first video
+        await loadVideo(0);
+        
+        // Preload next videos
+        preloadNextVideos();
+        
+      } catch (error) {
+        console.error('Initialization error:', error);
+        allUrls = ['https://x-world.blogspot.com']; // Fallback
+        createVideoSlides();
+        await loadVideo(0);
+      }
+    }
+
+    // Create video slides
+    function createVideoSlides() {
+      const slider = document.getElementById('videoSlider');
+      const indicator = document.getElementById('swipeIndicator');
       
-      if (progressFill) {
-        progressFill.style.width = percent + '%';
-      }
+      slider.innerHTML = '';
+      indicator.innerHTML = '';
+
+      allUrls.forEach((url, index) => {
+        // Create slide
+        const slide = document.createElement('div');
+        slide.className = 'video-slide';
+        slide.style.transform = `translateY(${index * 100}vh)`;
+        slide.innerHTML = `
+          <div class="video-content" id="videoContent${index}">
+            <div class="loading-overlay">
+              <div class="loading-spinner"></div>
+              <div class="loading-text">Loading video...</div>
+            </div>
+          </div>
+        `;
+        slider.appendChild(slide);
+
+        // Create indicator dot
+        const dot = document.createElement('div');
+        dot.className = `swipe-dot ${index === 0 ? 'active' : ''}`;
+        indicator.appendChild(dot);
+      });
+    }
+
+    // Load video with 5-second skip
+    async function loadVideo(index) {
+      if (isLoading || index >= allUrls.length) return;
       
-      if (status && statusEl) {
-        statusEl.textContent = status;
-      }
-    }
-    function updateLoadingText(text) {
-      const loadingText = document.getElementById('loadingText');
-      if (loadingText) {
-        loadingText.textContent = text;
-      }
-    }
-    function updateProgressDisplay() {
-      const progressDisplay = document.getElementById('progressDisplay');
-      if (progressDisplay) {
-        progressDisplay.textContent = `Video ${currentVideoIndex + 1} of ${allUrls.length}`;
-      }
-    }
-    // Navigation Functions - Button Only
-    function exitFullscreen() {
-      window.open('grid-view.html');
-    }
-    function nextVideo() {
-      if (currentVideoIndex < allUrls.length - 1) {
-        currentVideoIndex++;
-        loadCurrentVideo();
-        updateProgressDisplay();
-      } else {
-        showNotification('This is the last video');
-      }
-    }
-    function previousVideo() {
-      if (currentVideoIndex > 0) {
-        currentVideoIndex--;
-        loadCurrentVideo();
-        updateProgressDisplay();
-      } else {
-        showNotification('This is the first video');
-      }
-    }
-    function randomVideo() {
-      const newIndex = Math.floor(Math.random() * allUrls.length);
-      if (newIndex !== currentVideoIndex) {
-        currentVideoIndex = newIndex;
-        loadCurrentVideo();
-        updateProgressDisplay();
-      }
-    }
-    function shareVideo() {
-      const currentUrl = 'https://adultsvideos.netlify.app';
-      if (navigator.share) {
-        navigator.share({
-          title: 'Smart Live Video Pro - Awesome Live Video',
-          text: 'Check out this amazing video!',
-          url: currentUrl
-        }).catch(err => console.log('Error sharing:', err));
-      } else {
-        // Fallback to clipboard
-        navigator.clipboard.writeText(currentUrl).then(() => {
-          showNotification('Video link copied to clipboard!');
-        }).catch(err => {
-          console.log('Error copying to clipboard:', err);
-        });
-      }
-    }
-    // Player Controls
-    function toggleAutoplay() {
-      autoPlay = !autoPlay;
-      const button = document.getElementById('autoplayButton');
-      button.textContent = `⏯️ Auto: ${autoPlay ? 'ON' : 'OFF'}`;
+      isLoading = true;
+      const url = allUrls[index];
+      const videoContent = document.getElementById(`videoContent${index}`);
       
-      if (autoPlay) {
-        button.classList.add('secondary');
-      } else {
-        button.classList.remove('secondary');
+      try {
+        // Show loading
+        videoContent.innerHTML = `
+          <div class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading video...</div>
+          </div>
+        `;
+
+        // Process video URL
+        const videoData = await processVideoUrl(url);
+        
+        // Create video element
+        let videoHTML = '';
+        if (videoData.type === 'direct') {
+          videoHTML = `
+            <video class="fullscreen-video" id="video${index}" preload="metadata" controls>
+              <source src="${videoData.url}" type="video/mp4">
+            </video>
+          `;
+        } else {
+          videoHTML = `
+            <iframe class="fullscreen-iframe" id="video${index}" 
+                    src="${videoData.url}" 
+                    frameborder="0" 
+                    allow="autoplay; fullscreen" 
+                    allowfullscreen
+					sandbox="allow-forms allow-scripts allow-same-origin allow-popups-to-escape-sandbox">
+            </iframe>
+          `;
+        }
+
+        // Add skip overlay
+        videoHTML += `
+          <div class="skip-overlay" id="skipOverlay${index}">
+            <div class="skip-timer" id="skipTimer${index}">5</div>
+            <div class="skip-message">Starting in <span id="skipCount${index}">5</span> seconds...</div>
+          </div>
+        `;
+
+        videoContent.innerHTML = videoHTML;
+
+        // Setup video with 5-second skip
+        setupVideoSkip(index);
+        
+        // Handle landscape videos
+        const video = videoContent.querySelector('video');
+        if (video) {
+          video.addEventListener('loadedmetadata', () => {
+            if (video.videoWidth > video.videoHeight) {
+              video.classList.add('landscape-video');
+            }
+          });
+        }
+
+      } catch (error) {
+        console.error('Video loading error:', error);
+        videoContent.innerHTML = `
+          <div class="loading-overlay">
+            <div class="loading-text">Failed to load video</div>
+          </div>
+        `;
+      } finally {
+        isLoading = false;
       }
-      
-      localStorage.setItem('autoPlay', autoPlay);
     }
-    // Keyboard Shortcuts - Only for navigation buttons
-    function initializeKeyboardHandlers() {
+
+    // Setup 5-second skip
+    function setupVideoSkip(index) {
+      const skipOverlay = document.getElementById(`skipOverlay${index}`);
+      const skipTimer = document.getElementById(`skipTimer${index}`);
+      const skipCount = document.getElementById(`skipCount${index}`);
+      const video = document.getElementById(`video${index}`);
+      
+      let countdown = 5;
+      
+      const timer = setInterval(() => {
+        countdown--;
+        skipTimer.textContent = countdown;
+        skipCount.textContent = countdown;
+        
+        if (countdown <= 0) {
+          clearInterval(timer);
+          skipOverlay.style.display = 'none';
+          
+          // Start video if it's a video element
+          if (video && video.tagName === 'VIDEO') {
+            video.play().catch(e => console.log('Autoplay failed:', e));
+          }
+        }
+      }, 1000);
+    }
+
+    // Process video URL
+    async function processVideoUrl(url) {
+      try {
+        // Check for direct video URLs
+        if (url.match(/\.(mp4|webm|ogg|m3u8)(\?.*)?$/i)) {
+          return { url: url, type: 'direct' };
+        }
+
+        // Check for YouTube
+        const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+        if (youtubeMatch) {
+          return { 
+            url: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1&rel=0`, 
+            type: 'embed' 
+          };
+        }
+
+        // Check for Vimeo
+        const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+        if (vimeoMatch) {
+          return { 
+            url: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`, 
+            type: 'embed' 
+          };
+        }
+
+        // Try to extract video from page
+        try {
+          const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+          const response = await fetch(proxyUrl);
+          const data = await response.json();
+          const html = data.contents;
+          
+          // Extract video URL from HTML
+          const videoRegex = /<video[^>]*src=["']([^"'>]+)["']/i;
+          const sourceRegex = /<source[^>]*src=["']([^"'>]+)["']/i;
+          
+          let match = html.match(videoRegex) || html.match(sourceRegex);
+          if (match) {
+            let videoUrl = match[1];
+            if (!videoUrl.startsWith('http')) {
+              videoUrl = new URL(videoUrl, url).href;
+            }
+            return { url: videoUrl, type: 'direct' };
+          }
+        } catch (e) {
+          console.log('Failed to extract video, using iframe:', e);
+        }
+
+        // Fallback to iframe
+        return { url: url, type: 'iframe' };
+        
+      } catch (error) {
+        console.error('URL processing error:', error);
+        return { url: url, type: 'iframe' };
+      }
+    }
+
+    // Touch Handlers for Swipe
+    function setupTouchHandlers() {
+      const container = document.getElementById('videoContainer');
+      
+      container.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        e.preventDefault(); // Prevent page scroll
+      }, { passive: false });
+
+      container.addEventListener('touchend', (e) => {
+        touchEndY = e.changedTouches[0].clientY;
+        handleSwipe();
+      }, { passive: true });
+    }
+
+    // Handle swipe gesture
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const swipeDistance = touchStartY - touchEndY;
+
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0) {
+          // Swipe up - next video
+          nextVideo();
+        } else {
+          // Swipe down - previous video
+          previousVideo();
+        }
+      }
+    }
+
+    // Keyboard handlers
+    function setupKeyboardHandlers() {
       document.addEventListener('keydown', (e) => {
         switch(e.key) {
           case 'ArrowUp':
-          case 'ArrowLeft':
             e.preventDefault();
             previousVideo();
             break;
           case 'ArrowDown':
-          case 'ArrowRight':
             e.preventDefault();
             nextVideo();
             break;
-          case 'r':
-          case 'R':
-            randomVideo();
+          case ' ':
+            e.preventDefault();
+            togglePlayPause();
             break;
-          case 's':
-          case 'S':
-            shareVideo();
+          case 'c':
+          case 'C':
+            toggleComments();
             break;
         }
       });
     }
-    // Video Loading and Display - Optimized
-    async function loadCurrentVideo() {
-      if (isLoading) return;
-      
-      isLoading = true;
-      isVideoLoaded = false;
-      
-      const currentUrl = allUrls[currentVideoIndex];
-      const videoContent = document.getElementById('videoContent');
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      
-      // Show loading overlay
-      loadingOverlay.style.display = 'flex';
-      updateLoadingText('Loading video...');
-      updateProgress(0, 'Initializing...');
-      
-      try {
-        // Check cache first
-        const cacheKey = `video_${currentUrl}`;
-        if (videoCache.has(cacheKey)) {
-          updateProgress(50, 'Loading from cache...');
-          const cachedData = videoCache.get(cacheKey);
-          displayVideo(cachedData);
-          updateProgress(100, 'Ready to play');
-        } else {
-          updateProgress(25, 'Processing video URL...');
-          const videoData = await processVideoUrl(currentUrl);
-          
-          if (videoData) {
-            videoCache.set(cacheKey, videoData);
-            displayVideo(videoData);
-            updateProgress(100, 'Ready to play');
-          } else {
-            showError('Failed to load video', 'The video could not be loaded. Please try the next video.');
-          }
-        }
-        
-      } catch (err) {
-        console.error('Video loading error:', err);
-        showError('Loading Error', err.message || 'An unexpected error occurred while loading the video.');
-      } finally {
-        isLoading = false;
-        
-        // Hide loading overlay after a brief delay
-        setTimeout(() => {
-          loadingOverlay.style.display = 'none';
-          isVideoLoaded = true;
-        }, 800);
+
+    // Navigation functions
+    function nextVideo() {
+      if (currentVideoIndex < allUrls.length - 1) {
+        currentVideoIndex++;
+        switchToVideo(currentVideoIndex);
+        preloadNextVideos();
       }
     }
-    function displayVideo(videoData) {
-      const videoContent = document.getElementById('videoContent');
-      const domain = extractDomain(videoData.pageUrl);
-      const title = videoData.metadata?.title || `Video from ${domain}`;
+
+    function previousVideo() {
+      if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        switchToVideo(currentVideoIndex);
+      }
+    }
+
+    function switchToVideo(index) {
+      const slider = document.getElementById('videoSlider');
+      const dots = document.querySelectorAll('.swipe-dot');
       
-      let videoHTML = '';
+      // Update slider position
+      slider.style.transform = `translateY(-${index * 100}vh)`;
       
-      if (videoData.thumbnail && !videoData.videoUrl) {
-        // Show thumbnail with play button
-        videoHTML = `
-          <div class="video-thumbnail-display">
-            <img src="${videoData.thumbnail}" alt="${title}" class="preview-thumbnail">
-            <div class="thumbnail-overlay">
-              <div class="large-play-button" onclick="playVideoFromThumbnail('${videoData.pageUrl}')">▶</div>
-              <div class="video-title-overlay">
-                <div class="video-title-main">${title}</div>
-                <div class="video-subtitle">Click to play • ${domain}</div>
-              </div>
-            </div>
+      // Update indicators
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      
+      // Load video if not loaded
+      if (!document.getElementById(`video${index}`)) {
+        loadVideo(index);
+      }
+    }
+
+    // Preload next videos
+    function preloadNextVideos() {
+      const preloadCount = 2;
+      for (let i = 1; i <= preloadCount; i++) {
+        const nextIndex = currentVideoIndex + i;
+        if (nextIndex < allUrls.length && !document.getElementById(`video${nextIndex}`)) {
+          setTimeout(() => loadVideo(nextIndex), i * 1000);
+        }
+      }
+    }
+
+    // Comments functions
+    function loadComments() {
+      // Try to load from comments.json, fallback to sample comments
+      fetch('comments.json')
+        .then(response => response.json())
+        .then(data => {
+          comments = data;
+          displayComments();
+        })
+        .catch(() => {
+          comments = sampleComments;
+          displayComments();
+        });
+    }
+
+    function displayComments() {
+      const commentsList = document.getElementById('commentsList');
+      commentsList.innerHTML = '';
+
+      comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.className = 'comment-item';
+        commentElement.innerHTML = `
+          <img src="${comment.avatar}" alt="${comment.name}" class="comment-avatar">
+          <div class="comment-content">
+            <div class="comment-name">${comment.name}</div>
+            <div class="comment-text">${comment.text}</div>
+            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
           </div>
         `;
-      } else if (videoData.videoUrl) {
-        if (videoData.type === 'direct') {
-          videoHTML = `
-            <video class="fullscreen-video video-transition" controls preload="metadata" 
-                   crossorigin="anonymous" controlsList="nodownload" ${autoPlay ? 'autoplay' : ''}>
-              <source src="${videoData.videoUrl}" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          `;
-        } else if (videoData.type === 'embed') {
-          videoHTML = `
-            <iframe class="fullscreen-iframe video-transition" 
-                    src="${videoData.videoUrl}" 
-                    frameborder="0" 
-                    allow="autoplay; fullscreen; picture-in-picture" 
-                    allowfullscreen 
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms">
-            </iframe>
-          `;
-        } else {
-          videoHTML = `
-            <iframe class="fullscreen-iframe video-transition" 
-                    src="${videoData.pageUrl}" 
-                    frameborder="0" 
-                    allowfullscreen 
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                    referrerpolicy="no-referrer">
-            </iframe>
-          `;
+        commentsList.appendChild(commentElement);
+      });
+    }
+
+    function startCommentAnimation() {
+      setInterval(() => {
+        if (comments.length > 0) {
+          addRandomComment();
         }
+      }, 5000 + Math.random() * 10000); // Random interval between 5-15 seconds
+    }
+
+    function addRandomComment() {
+      const randomNames = ['Alex', 'Sarah', 'Mike', 'Emma', 'John', 'Lisa', 'David', 'Anna'];
+      const randomTexts = [
+        'Amazing video! 🔥',
+        'Love this content!',
+        'So cool! 😍',
+        'More please!',
+        'Incredible! 👍',
+        'Best video ever!',
+        'Can\'t stop watching!',
+        'This is awesome!'
+      ];
+
+      const newComment = {
+        id: Date.now(),
+        name: randomNames[Math.floor(Math.random() * randomNames.length)],
+        avatar: `https://i.pravatar.cc/40?img=${Math.floor(Math.random() * 70) + 1}`,
+        text: randomTexts[Math.floor(Math.random() * randomTexts.length)],
+        timestamp: Date.now()
+      };
+
+      comments.unshift(newComment);
+      if (comments.length > 50) {
+        comments.pop(); // Keep only latest 50 comments
+      }
+
+      displayComments();
+    }
+
+    function toggleComments() {
+      const overlay = document.getElementById('commentsOverlay');
+      const toggle = document.getElementById('commentsToggle');
+      
+      commentsVisible = !commentsVisible;
+      
+      if (commentsVisible) {
+        overlay.classList.add('show');
+        toggle.style.background = 'var(--accent-color)';
       } else {
-        // Fallback to iframe
-        videoHTML = `
-          <iframe class="fullscreen-iframe video-transition" 
-                  src="${videoData.pageUrl}" 
-                  frameborder="0" 
-                  allowfullscreen 
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                  referrerpolicy="no-referrer">
-          </iframe>
-        `;
-      }
-      
-      // Clear previous content and add new
-      const loadingOverlay = videoContent.querySelector('.loading-overlay');
-      videoContent.innerHTML = '';
-      if (loadingOverlay) {
-        videoContent.appendChild(loadingOverlay);
-      }
-      
-      // Add new video content
-      const newVideoContainer = document.createElement('div');
-      newVideoContainer.innerHTML = videoHTML;
-      videoContent.appendChild(newVideoContainer);
-      
-      // Setup video event listeners
-      const video = newVideoContainer.querySelector('video');
-      if (video) {
-        video.addEventListener('ended', () => {
-          if (autoPlay && currentVideoIndex < allUrls.length - 1) {
-            setTimeout(nextVideo, 1000);
-          }
-        });
-        
-        video.addEventListener('error', () => {
-          showError('Video Playback Error', 'This video cannot be played. Trying next video...');
-          setTimeout(nextVideo, 2000);
-        });
+        overlay.classList.remove('show');
+        toggle.style.background = 'var(--control-bg)';
       }
     }
-    function playVideoFromThumbnail(url) {
-      // Try to load the actual video
-      loadCurrentVideo();
-    }
-    // Video Processing - Simplified and Optimized
-    async function processVideoUrl(pageUrl) {
-      updateProgress(30, 'Extracting video data...');
+
+    function sendComment() {
+      const input = document.getElementById('commentInput');
+      const text = input.value.trim();
       
-      try {
-        // Try special platforms first
-        const specialData = await trySpecialPlatforms(pageUrl);
-        if (specialData) {
-          return specialData;
-        }
-        
-        updateProgress(60, 'Processing with proxy...');
-        
-        // Try proxy services
-        const proxyServices = [
-          `https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`,
-          `https://corsproxy.io/?${encodeURIComponent(pageUrl)}`
-        ];
-        for (const proxyUrl of proxyServices) {
-          try {
-            const response = await fetch(proxyUrl);
-            if (!response.ok) continue;
-            
-            let html;
-            if (proxyUrl.includes('allorigins')) {
-              const data = await response.json();
-              html = data.contents;
-            } else {
-              html = await response.text();
-            }
-            
-            const videoUrl = extractVideoFromHtml(html, pageUrl);
-            const thumbnail = await extractThumbnailFromHtml(html, pageUrl);
-            const metadata = extractMetadataFromHtml(html);
-            
-            if (videoUrl) {
-              return {
-                pageUrl,
-                videoUrl,
-                thumbnail,
-                metadata,
-                type: 'direct',
-                status: 'Ready'
-              };
-            } else if (thumbnail) {
-              return {
-                pageUrl,
-                videoUrl: null,
-                thumbnail,
-                metadata,
-                type: 'thumbnail',
-                status: 'Thumbnail Only'
-              };
-            }
-            
-          } catch (err) {
-            console.warn('Proxy failed:', proxyUrl, err);
-          }
-        }
-        
-        // Fallback to direct iframe
-        return {
-          pageUrl,
-          videoUrl: pageUrl,
-          thumbnail: null,
-          metadata: { title: `Video from ${extractDomain(pageUrl)}` },
-          type: 'iframe',
-          status: 'Direct Embed'
+      if (text) {
+        const newComment = {
+          id: Date.now(),
+          name: 'You',
+          avatar: 'https://i.pravatar.cc/40?img=0',
+          text: text,
+          timestamp: Date.now()
         };
         
-      } catch (err) {
-        throw new Error('Failed to process video URL');
-      }
-    }
-    // Enhanced Special Platform Handling
-    async function trySpecialPlatforms(pageUrl) {
-      const url = new URL(pageUrl);
-      
-      if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
-        const videoId = extractYouTubeId(pageUrl);
-        if (videoId) {
-          const thumbnail = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-          const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=${autoPlay ? 1 : 0}&rel=0&modestbranding=1`;
-          
-          return {
-            pageUrl,
-            videoUrl: embedUrl,
-            thumbnail,
-            type: 'embed',
-            status: 'YouTube Video',
-            metadata: { title: 'YouTube Video', description: '' }
-          };
-        }
-      }
-      
-      if (url.hostname.includes('vimeo.com')) {
-        const videoId = pageUrl.match(/vimeo\.com\/(\d+)/);
-        if (videoId) {
-          const embedUrl = `https://player.vimeo.com/video/${videoId[1]}?autoplay=${autoPlay ? 1 : 0}`;
-          
-          return {
-            pageUrl,
-            videoUrl: embedUrl,
-            thumbnail: null,
-            type: 'embed',
-            status: 'Vimeo Video',
-            metadata: { title: 'Vimeo Video', description: '' }
-          };
-        }
-      }
-      
-      return null;
-    }
-    // Utility Functions
-    function extractDomain(url) {
-      try {
-        return new URL(url).hostname.replace('www.', '');
-      } catch (e) {
-        return url;
-      }
-    }
-    function extractYouTubeId(url) {
-      const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-      const match = url.match(regex);
-      return match ? match[1] : null;
-    }
-    function extractVideoFromHtml(html, baseUrl) {
-      const extractors = [
-        /<video[^>]*src=["']([^"'>]+)["']/gi,
-        /<source[^>]*src=["']([^"'>]+)["']/gi,
-        /https?:\/\/[^\s"'<>()]+\.(?:mp4|webm|ogg|m3u8)(?:\?[^\s"'<>()]*)?/gi
-      ];
-      for (const regex of extractors) {
-        let match;
-        while ((match = regex.exec(html)) !== null) {
-          let videoUrl = match[1] || match[0];
-          
-          if (videoUrl && !videoUrl.startsWith('http')) {
-            try {
-              videoUrl = new URL(videoUrl, baseUrl).href;
-            } catch (e) {
-              continue;
-            }
-          }
-          
-          if (videoUrl && videoUrl.startsWith('http') && !videoUrl.includes('thumbnail')) {
-            return videoUrl;
-          }
-        }
-      }
-      
-      return null;
-    }
-    function extractThumbnailFromHtml(html, baseUrl) {
-      const thumbnailRegexes = [
-        /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"'>]+)["']/gi,
-        /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"'>]+)["']/gi,
-        /<video[^>]+poster=["']([^"'>]+)["']/gi
-      ];
-      for (const regex of thumbnailRegexes) {
-        const match = regex.exec(html);
-        if (match && match[1]) {
-          let thumbnailUrl = match[1];
-          
-          if (!thumbnailUrl.startsWith('http')) {
-            try {
-              thumbnailUrl = new URL(thumbnailUrl, baseUrl).href;
-            } catch (e) {
-              continue;
-            }
-          }
-          
-          if (!thumbnailUrl.includes('logo') && !thumbnailUrl.includes('avatar')) {
-            return thumbnailUrl;
-          }
-        }
-      }
-      
-      return null;
-    }
-    function extractMetadataFromHtml(html) {
-      try {
-        const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-        const descMatch = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"'>]+)["']/i);
+        comments.unshift(newComment);
+        displayComments();
+        input.value = '';
         
-        return {
-          title: titleMatch ? titleMatch[1].substring(0, 100) : 'Video Content',
-          description: descMatch ? descMatch[1].substring(0, 200) : ''
-        };
-      } catch (e) {
-        return { title: 'Video Content', description: '' };
+        // Scroll to top of comments
+        document.getElementById('commentsList').scrollTop = 0;
       }
     }
-    // Error Handling
-    function showError(title, message) {
-      const videoContent = document.getElementById('videoContent');
+
+    // Utility functions
+    function getTimeAgo(timestamp) {
+      const now = Date.now();
+      const diff = now - timestamp;
+      const minutes = Math.floor(diff / 60000);
       
-      videoContent.innerHTML = `
-        <div class="error-display">
-          <div class="error-icon">⚠️</div>
-          <div class="error-title">${title}</div>
-          <div class="error-message">${message}</div>
-          <div class="error-actions">
-            <button class="nav-button" onclick="nextVideo()">Next Video</button>
-            <button class="nav-button secondary" onclick="randomVideo()">Random Video</button>
-            <button class="nav-button danger" onclick="exitFullscreen()">Go Home</button>
-          </div>
-        </div>
-      `;
+      if (minutes < 1) return 'Just now';
+      if (minutes === 1) return '1 minute ago';
+      if (minutes < 60) return `${minutes} minutes ago`;
+      
+      const hours = Math.floor(minutes / 60);
+      if (hours === 1) return '1 hour ago';
+      if (hours < 24) return `${hours} hours ago`;
+      
+      const days = Math.floor(hours / 24);
+      if (days === 1) return '1 day ago';
+      return `${days} days ago`;
     }
-    // Notification System
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function togglePlayPause() {
+      const video = document.getElementById(`video${currentVideoIndex}`);
+      if (video && video.tagName === 'VIDEO') {
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
+    }
+
+    // Control functions
+    function goHome() {
+      window.open('home.html', '_blank');
+    }
+
+    function shareVideo() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Amazing Live Video',
+          text: 'Check out this awesome video!',
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        showNotification('Link copied to clipboard!');
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Ad functions
+    function closeAd(adId) {
+      const ad = document.getElementById(adId);
+      if (ad) {
+        ad.style.display = 'none';
+      }
+    }
+
+    // Notification
     function showNotification(message) {
       const notification = document.createElement('div');
       notification.style.cssText = `
@@ -1191,94 +1319,29 @@
         color: white;
         padding: 1rem 2rem;
         border-radius: 1rem;
-        font-weight: 600;
         z-index: 2000;
-        animation: fadeInOut 3s ease-in-out forwards;
         backdrop-filter: blur(10px);
         border: 2px solid var(--control-border);
       `;
       notification.textContent = message;
-      
       document.body.appendChild(notification);
       
       setTimeout(() => {
-        if (notification.parentNode) {
-          notification.remove();
-        }
+        notification.remove();
       }, 3000);
     }
-    // Load saved preferences
-    function loadPreferences() {
-      const savedAutoPlay = localStorage.getItem('autoPlay');
-      
-      if (savedAutoPlay !== null) {
-        autoPlay = savedAutoPlay === 'true';
-        const button = document.getElementById('autoplayButton');
-        button.textContent = `⏯️ Auto: ${autoPlay ? 'ON' : 'OFF'}`;
-        if (autoPlay) {
-          button.classList.add('secondary');
-        }
+
+    // Handle comment input
+    document.getElementById('commentInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendComment();
       }
-    }
-    // Optimized Initialization - Start with one random video
-    (async function init() {
-      loadPreferences();
-      initializeKeyboardHandlers();
-      
-      // Start with one random video from ready URLs
-      const randomIndex = Math.floor(Math.random() * readyUrls.length);
-      allUrls = [readyUrls[randomIndex]];
-      currentVideoIndex = 0;
-      
-      updateLoadingText('Loading first video...');
-      updateProgress(10, 'Setting up player...');
-      
-      // Load the first random video immediately
-      try {
-        updateProgress(50, 'Loading video...');
-        await loadCurrentVideo();
-        updateProgress(100, 'Ready!');
-        updateProgressDisplay();
-      } catch (err) {
-        console.error('Initial video load failed:', err);
-        showError('Startup Error', 'Failed to load initial video. Please refresh the page.');
-      }
-      
-      // Load full URL list in background after first video loads
-      setTimeout(async () => {
-        try {
-          const rawListURL = 'https://raw.githubusercontent.com/application0/MyData/refs/heads/main/FindVideoInURLs';
-          const res = await fetch(rawListURL);
-          
-          if (res.ok) {
-            const text = await res.text();
-            const newUrls = text.split(/\r?\n/).filter(u => u.trim() && /^https?:\/\//.test(u.trim()));
-            
-            if (newUrls.length > 0) {
-              // Merge with ready URLs, but keep current video as first
-              const currentUrl = allUrls[0];
-              const uniqueUrls = [...new Set([currentUrl, ...newUrls])];
-              
-              // Shuffle the remaining URLs
-              for (let i = uniqueUrls.length - 1; i > 1; i--) {
-                const j = Math.floor(Math.random() * (i - 1)) + 1;
-                [uniqueUrls[i], uniqueUrls[j]] = [uniqueUrls[j], uniqueUrls[i]];
-              }
-              
-              allUrls = uniqueUrls;
-              updateProgressDisplay();
-              console.log(`Background loaded ${allUrls.length} total videos`);
-            }
-          }
-        } catch (err) {
-          console.warn('Background loading failed:', err);
-        }
-      }, 3000);
-      
-    })();
-    // Prevent back navigation
-    window.addEventListener('popstate', function(event) {
-      exitFullscreen();
+    });
+
+    // Prevent page reload/navigation
+    window.addEventListener('beforeunload', (e) => {
+      e.preventDefault();
+      e.returnValue = '';
     });
   </script>
 </body>
