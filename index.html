@@ -9,7 +9,8 @@
   
   <!-- Native Banner Ad -->
   <script async="async" data-cfasync="false" src="//pl27022671.revenuecpmgate.com/bd33afff2b0d2055fa33924d85770ab4/invoke.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+	
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Video Platform - TikTok Style Video Experience</title>
@@ -958,10 +959,15 @@
         let videoHTML = '';
         if (videoData.type === 'direct') {
           videoHTML = `
-            <video class="fullscreen-video" id="video${index}" preload="metadata" controls>
-              <source src="${videoData.url}" type="video/mp4">
+            <video class="fullscreen-video" 
+                   id="video${index}" 
+                   preload="auto" 
+                   controls 
+
+                   oncontextmenu="return false;">
             </video>
           `;
+			//                   controlslist="nodownload" 
         } else {
           videoHTML = `
             <iframe class="fullscreen-iframe" id="video${index}" 
@@ -983,11 +989,13 @@
         `;
 
         videoContent.innerHTML = videoHTML;
-
+ if (videoData.type === 'direct') {
+          setupVideoPlayer(index, videoData.url);
+        }
         // Setup video with 5-second skip
         setupVideoSkip(index);
-        
-        // Handle landscape videos
+       
+    /*    // Handle landscape videos
         const video = videoContent.querySelector('video');
         if (video) {
           video.addEventListener('loadedmetadata', () => {
@@ -995,7 +1003,7 @@
               video.classList.add('landscape-video');
             }
           });
-        }
+        }*/
 
       } catch (error) {
         console.error('Video loading error:', error);
@@ -1007,6 +1015,44 @@
       } finally {
         isLoading = false;
       }
+    }
+
+	  function setupVideoPlayer(index, videoUrl) {
+        const videoElement = document.getElementById(`video${index}`);
+        
+        // Check if the URL is an HLS stream (.m3u8)
+        if (videoUrl.includes('.m3u8')) {
+            if (Hls.isSupported()) {
+                console.log("HLS.js is supported. Playing m3u8 stream.");
+                const hls = new Hls();
+                hls.loadSource(videoUrl);
+                hls.attachMedia(videoElement);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    videoElement.play().catch(e => console.log('Autoplay for HLS failed:', e));
+                });
+            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (like on Safari)
+                console.log("Native HLS support found.");
+                videoElement.src = videoUrl;
+                videoElement.addEventListener('loadedmetadata', function () {
+                    videoElement.play().catch(e => console.log('Autoplay for native HLS failed:', e));
+                });
+            } else {
+                 console.error("HLS is not supported on this browser.");
+            }
+        } else {
+            // It's a normal video format like MP4
+            console.log("Playing standard MP4 video.");
+            videoElement.src = videoUrl;
+            videoElement.play().catch(e => console.log('Autoplay for MP4 failed:', e));
+        }
+
+        // Add landscape class if needed
+        videoElement.addEventListener('loadedmetadata', () => {
+          if (videoElement.videoWidth > videoElement.videoHeight) {
+            videoElement.classList.add('landscape-video');
+          }
+        });
     }
 
     // Setup 5-second skip
@@ -1035,7 +1081,62 @@
       }, 1000);
     }
 
-    // Process video URL
+	  async function processVideoUrl(url) {
+      try {
+        // Strategy 1: Check for direct video URLs, including popular platforms
+        if (url.match(/\.(mp4|webm|ogg|m3u8)(\?.*)?$/i)) return { url, type: 'direct' };
+        const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+        if (youtubeMatch) return { url: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1&rel=0`, type: 'embed' };
+        const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+        if (vimeoMatch) return { url: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`, type: 'embed' };
+
+        // Strategy 2: Fetch the page content using a proxy and parse it
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error(`Proxy fetch failed for ${url}`);
+        const data = await response.json();
+        const html = data.contents;
+        if (!html) throw new Error(`Empty HTML content for ${url}`);
+
+        // Strategy 2.1: Find video links using Regex (from simple to complex)
+        let videoUrlMatch;
+        // High-quality mp4 source
+        videoUrlMatch = html.match(/"(https?:\/\/[^"]+\.mp4[^"]*)"/i);
+        if(videoUrlMatch) {
+            console.log("SUCCESS: Found MP4 link via direct URL match.");
+            return { url: videoUrlMatch[1], type: 'direct' };
+        }
+        // m3u8 (HLS Stream) link
+        videoUrlMatch = html.match(/"(https?:\/\/[^"]+\.m3u8[^"]*)"/i);
+        if (videoUrlMatch) {
+            console.log("SUCCESS: Found M3U8 link.");
+            return { url: videoUrlMatch[1], type: 'direct' };
+        }
+        // Check inside <video> tag
+        videoUrlMatch = html.match(/<video[^>]+src="([^"]+)"/i);
+        if (videoUrlMatch) {
+            console.log("SUCCESS: Found video link in <video> tag.");
+            return { url: new URL(videoUrlMatch[1], url).href, type: 'direct' };
+        }
+        // Check inside <source> tag
+        videoUrlMatch = html.match(/<source[^>]+src="([^"]+)"/i);
+         if (videoUrlMatch) {
+            console.log("SUCCESS: Found video link in <source> tag.");
+            return { url: new URL(videoUrlMatch[1], url).href, type: 'direct' };
+        }
+
+        // Strategy 3: If nothing found, fallback to iframe
+        console.warn('FALLBACK: No direct video link found. Using iframe for:', url);
+        return { url, type: 'iframe' };
+
+      } catch (error) {
+        console.error('URL processing critical error:', error);
+        console.warn('CRITICAL FALLBACK: Using iframe due to an error for:', url);
+        return { url, type: 'iframe' }; // Fallback to iframe on any error
+      }
+    }
+
+/*    // Process video URL
     async function processVideoUrl(url) {
   try {
     // সরাসরি ভিডিও ফাইলের লিঙ্ক কি না, তা পরীক্ষা করুন
@@ -1107,7 +1208,7 @@
     return { url: url, type: 'iframe' };
   }
 }
-
+*/
     // Touch Handlers for Swipe
     function setupTouchHandlers() {
       const container = document.getElementById('videoContainer');
