@@ -112,7 +112,6 @@
       height: 100vh;
       border: none;
       background: var(--bg-dark);
-	  pointer-events: none;
     }
 
     /* Landscape video handling */
@@ -901,7 +900,7 @@
                     frameborder="0" 
                     allow="autoplay; fullscreen" 
                     allowfullscreen
-					sandbox="allow-forms allow-scripts allow-same-origin allow-popups-to-escape-sandbox">
+					sandbox="allow-scripts allow-presentation allow-same-origin"> 
             </iframe>
           `;
         }
@@ -969,61 +968,76 @@
 
     // Process video URL
     async function processVideoUrl(url) {
-      try {
-        // Check for direct video URLs
-        if (url.match(/\.(mp4|webm|ogg|m3u8)(\?.*)?$/i)) {
-          return { url: url, type: 'direct' };
-        }
-
-        // Check for YouTube
-        const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-        if (youtubeMatch) {
-          return { 
-            url: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1&rel=0`, 
-            type: 'embed' 
-          };
-        }
-
-        // Check for Vimeo
-        const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-        if (vimeoMatch) {
-          return { 
-            url: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`, 
-            type: 'embed' 
-          };
-        }
-
-        // Try to extract video from page
-        try {
-          const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-          const response = await fetch(proxyUrl);
-          const data = await response.json();
-          const html = data.contents;
-          
-          // Extract video URL from HTML
-          const videoRegex = /<video[^>]*src=["']([^"'>]+)["']/i;
-          const sourceRegex = /<source[^>]*src=["']([^"'>]+)["']/i;
-          
-          let match = html.match(videoRegex) || html.match(sourceRegex);
-          if (match) {
-            let videoUrl = match[1];
-            if (!videoUrl.startsWith('http')) {
-              videoUrl = new URL(videoUrl, url).href;
-            }
-            return { url: videoUrl, type: 'direct' };
-          }
-        } catch (e) {
-          console.log('Failed to extract video, using iframe:', e);
-        }
-
-        // Fallback to iframe
-        return { url: url, type: 'iframe' };
-        
-      } catch (error) {
-        console.error('URL processing error:', error);
-        return { url: url, type: 'iframe' };
-      }
+  try {
+    // সরাসরি ভিডিও ফাইলের লিঙ্ক কি না, তা পরীক্ষা করুন
+    if (url.match(/\.(mp4|webm|ogg|m3u8)(\?.*)?$/i)) {
+      console.log('Direct video link found:', url);
+      return { url: url, type: 'direct' };
     }
+
+    // ইউটিউব, ভিমিও-এর মতো জনপ্রিয় প্ল্যাটফর্মগুলোর জন্য সরাসরি এমবেড লিঙ্ক তৈরি করুন
+    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    if (youtubeMatch) {
+      return { 
+        url: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1&rel=0`, 
+        type: 'embed' 
+      };
+    }
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) {
+      return { 
+        url: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`, 
+        type: 'embed' 
+      };
+    }
+
+    // CORS প্রক্সির মাধ্যমে পেজের HTML কন্টেন্ট আনুন
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const response = await fetch(proxyUrl);
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch page content for ${url}`);
+    }
+
+    const data = await response.json();
+    const html = data.contents;
+
+    if (!html) {
+        throw new Error(`Empty HTML content for ${url}`);
+    }
+
+    // HTML-এর ভেতর থেকে ভিডিও লিঙ্ক খোঁজার চেষ্টা করুন (Regex ব্যবহার করে)
+    // প্যাটার্ন ১: <video> ট্যাগের src অ্যাট্রিবিউট
+    let videoUrlMatch = html.match(/<video[^>]+src="([^"]+\.mp4[^"]*)"/i);
+    if (videoUrlMatch) {
+        console.log('Found MP4 link in <video> tag:', videoUrlMatch[1]);
+        return { url: new URL(videoUrlMatch[1], url).href, type: 'direct' };
+    }
+
+    // প্যাটার্ন ২: <source> ট্যাগের src অ্যাট্রিবিউট
+    videoUrlMatch = html.match(/<source[^>]+src="([^"]+\.mp4[^"]*)"/i);
+    if (videoUrlMatch) {
+        console.log('Found MP4 link in <source> tag:', videoUrlMatch[1]);
+        return { url: new URL(videoUrlMatch[1], url).href, type: 'direct' };
+    }
+      
+    // প্যাটার্ন ৩: .m3u8 (স্ট্রিমিং) লিঙ্ক খোঁজা
+    videoUrlMatch = html.match(/["'](https?:\/\/[^"]+\.m3u8[^"]*)["']/i);
+    if (videoUrlMatch) {
+        console.log('Found m3u8 link:', videoUrlMatch[1]);
+        return { url: videoUrlMatch[1], type: 'direct' }; // m3u8 চালাতে hls.js লাইব্রেরি লাগতে পারে
+    }
+
+    // যদি কোনো সরাসরি লিঙ্ক না পাওয়া যায়, তবে iframe হিসেবে ফলব্যাক করুন
+    console.warn('No direct video link found. Falling back to iframe for:', url);
+    return { url: url, type: 'iframe' };
+    
+  } catch (error) {
+    console.error('URL processing error:', error);
+    // কোনো সমস্যা হলে iframe হিসেবে ফলব্যাক করুন
+    return { url: url, type: 'iframe' };
+  }
+}
 
     // Touch Handlers for Swipe
     function setupTouchHandlers() {
