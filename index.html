@@ -158,7 +158,7 @@
       right: 0;
       height: 50vh;
       background: linear-gradient(transparent, var(--comment-bg));
-      z-index: 1002;
+      z-index: 1005;
       transform: translateY(100%);
       transition: transform 0.3s ease;
       backdrop-filter: blur(10px);
@@ -296,6 +296,62 @@
       transform: scale(1.1);
     }
 
+	   .controls-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1003;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+        pointer-events: none; /* Allows click/touch to go through to video */
+    }
+
+    .controls-wrapper.hidden {
+        opacity: 0;
+    }
+    
+    .controls-wrapper > * {
+        pointer-events: auto; /* Makes sure buttons inside are clickable */
+    }
+
+    /* Navigation Buttons (Next/Previous) */
+    .navigation-controls {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        transform: translateY(-50%);
+    }
+
+    .nav-button {
+        width: 50px;
+        height: 50px;
+        background: var(--control-bg);
+        border: 2px solid var(--control-border);
+        border-radius: 50%;
+        color: white;
+        font-size: 2.5rem;
+        font-weight: bold;
+        line-height: 45px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-button:hover {
+      background: var(--primary-color);
+      transform: scale(1.1);
+    }
+
     /* Controls */
     .video-controls {
       position: fixed;
@@ -304,7 +360,7 @@
       display: flex;
       flex-direction: column;
       gap: 15px;
-      z-index: 1003;
+      z-index: 1004;
     }
 
     .control-button {
@@ -346,7 +402,7 @@
       justify-content: center;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
-      z-index: 1003;
+      z-index: 1005;
     }
 
     .comments-toggle:hover {
@@ -499,7 +555,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      z-index: 1003;
+       1003;
     }
 
     .swipe-dot {
@@ -606,6 +662,12 @@
     <button class="control-button" onclick="shareVideo()" title="Share">📤</button>
     <button class="control-button" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   </div>
+ <!-- Navigation Buttons -->
+    <div class="navigation-controls">
+        <button class="nav-button prev-button" onclick="previousVideo()" title="Previous Video">‹</button>
+        <button class="nav-button next-button" onclick="nextVideo()" title="Next Video">›</button>
+    </div>
+	
 
   <!-- Comments Toggle Button -->
   <button class="comments-toggle" onclick="toggleComments()" id="commentsToggle">💬</button>
@@ -735,14 +797,15 @@
     let currentVideoIndex = 0;
     let videoCache = new Map();
     let isLoading = false;
-    let commentsVisible = false;
+    let commentsVisible = true;
     let comments = [];
     let commentIndex = 0;
     let touchStartY = 0;
     let touchEndY = 0;
     let isSkipping = false;
     let skipTimer = null;
-
+    let controlsHideTimer = null;
+	  
     // Sample comments data (will be replaced by comments.json)
     const sampleComments = [
       {
@@ -826,7 +889,13 @@
         
         // Preload next videos
         preloadNextVideos();
-        
+        const commentsOverlay = document.getElementById('commentsOverlay');
+        const commentsToggle = document.getElementById('commentsToggle');
+        commentsOverlay.classList.add('show');
+        commentsToggle.style.background = 'var(--accent-color)';
+
+        // কন্ট্রোলগুলো দেখান এবং অটো-হাইড টাইমার সেট করুন
+        showControls(); 
       } catch (error) {
         console.error('Initialization error:', error);
         allUrls = ['https://x-world.blogspot.com']; // Fallback
@@ -1042,20 +1111,59 @@
     // Touch Handlers for Swipe
     function setupTouchHandlers() {
       const container = document.getElementById('videoContainer');
-      
+		
+      container.addEventListener('click', showControls, true);
+		
       container.addEventListener('touchstart', (e) => {
         touchStartY = e.touches[0].clientY;
+
+		  const currentIframe = document.querySelector(`#video${currentVideoIndex}.fullscreen-iframe`);
+        if (currentIframe) {
+            currentIframe.style.pointerEvents = 'none';
+        }
+        showControls();
       }, { passive: true });
 
       container.addEventListener('touchmove', (e) => {
-        e.preventDefault(); // Prevent page scroll
+       // e.preventDefault(); // Prevent page scroll
       }, { passive: false });
 
       container.addEventListener('touchend', (e) => {
         touchEndY = e.changedTouches[0].clientY;
         handleSwipe();
+
+		  const currentIframe = document.querySelector(`#video${currentVideoIndex}.fullscreen-iframe`);
+        if (currentIframe) {
+            currentIframe.style.pointerEvents = 'auto';
+        }
       }, { passive: true });
     }
+
+	  function showControls() {
+        const controlsWrapper = document.querySelector('.controls-wrapper');
+        if (controlsWrapper) {
+            controlsWrapper.classList.remove('hidden');
+        }
+
+        // Clear any existing timer
+        if (controlsHideTimer) {
+            clearTimeout(controlsHideTimer);
+        }
+
+        // Set a new timer to hide controls after 5 seconds
+        controlsHideTimer = setTimeout(() => {
+            hideControls();
+        }, 5000);
+    }
+
+    // Function to hide the controls
+    function hideControls() {
+        const controlsWrapper = document.querySelector('.controls-wrapper');
+        if (controlsWrapper) {
+            controlsWrapper.classList.add('hidden');
+        }
+    }
+    
 
     // Handle swipe gesture
     function handleSwipe() {
@@ -1217,13 +1325,12 @@
       const overlay = document.getElementById('commentsOverlay');
       const toggle = document.getElementById('commentsToggle');
       
-      commentsVisible = !commentsVisible;
+      overlay.classList.toggle('show');
+      commentsVisible = overlay.classList.contains('show');
       
       if (commentsVisible) {
-        overlay.classList.add('show');
         toggle.style.background = 'var(--accent-color)';
       } else {
-        overlay.classList.remove('show');
         toggle.style.background = 'var(--control-bg)';
       }
     }
